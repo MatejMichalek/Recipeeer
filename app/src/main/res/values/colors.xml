@@ -7,5 +7,6 @@
     <!--another colors for title-->
     <!--#673AB7-->
     <!--#D13030-->
-    <color name="colorAppBackground">@android:color/holo_orange_light</color>
+    <color name="colorAppBackground">#CDDC39</color>
+    <color name="colorToolbar">#EF5350</color>
 </resources>
