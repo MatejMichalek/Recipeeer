@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorAppBackground"
     tools:context=".login.LogInActivity">
 
@@ -31,9 +32,12 @@
                     android:textAllCaps="true"
                     android:textColor="@color/colorTitle"
                     android:textSize="66sp"/>
+
         </LinearLayout>
 
+
         <Button
+            android:id="@+id/logInButton"
             android:layout_width="350dp"
             android:layout_height="80dp"
             android:drawableStart="@drawable/google_logo_resized"
