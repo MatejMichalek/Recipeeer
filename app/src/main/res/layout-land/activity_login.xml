@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_orange_light"
-    tools:context=".LogInActivity"
-    >
+    android:background="@color/colorAppBackground"
+    tools:context=".login.LogInActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,48 +12,45 @@
         android:orientation="horizontal"
         android:paddingTop="40dp"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"        >
+        android:layout_centerInParent="true">
+
         <ImageView
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@android:dimen/app_icon_size"
+            android:paddingStart="@android:dimen/app_icon_size"
+            android:paddingEnd="@android:dimen/app_icon_size"
             android:src="@drawable/recipeeer_icon"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:fontFamily="@font/finger_paint"
-            android:gravity="left|center"
+            android:gravity="start|center"
             android:text="@string/app_name"
             android:textAllCaps="true"
-            android:textColor="#2C110A"
+            android:textColor="@color/colorTitle"
             android:textSize="66sp"
-            android:paddingRight="50dp"
-            />
+            android:paddingStart="0dp"
+            android:paddingEnd="50dp"/>
     </LinearLayout>
 
     <Button
+        android:id="@+id/signInButton"
         android:layout_width="350dp"
         android:layout_height="80dp"
         android:drawableStart="@drawable/google_logo_resized"
-        android:text="Sign in with Google"
+        android:text="@string/sign_in_text"
         android:textSize="28sp"
         android:textColor="@android:color/secondary_text_light"
         android:fontFamily="@font/roboto_medium"
-        android:paddingRight="20dp"
-        android:paddingLeft="15dp"
-        android:paddingVertical="10dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:textAllCaps="false"
         android:background="@drawable/sign_in_btn"
         android:textAlignment="textEnd"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="30dp"
-        />
-
-
-
-
-
-
+        android:layout_marginBottom="30dp"/>
 </RelativeLayout>
