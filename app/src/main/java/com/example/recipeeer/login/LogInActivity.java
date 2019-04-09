@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.recipeeer.MainActivity;
 import com.example.recipeeer.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -91,7 +92,7 @@ public class LogInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             Toast.makeText(LogInActivity.this,user.getDisplayName(),Toast.LENGTH_LONG).show();
-//                            enterMainActivity(user);
+                            enterMainActivity(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -102,5 +103,11 @@ public class LogInActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    private void enterMainActivity(FirebaseUser user) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
