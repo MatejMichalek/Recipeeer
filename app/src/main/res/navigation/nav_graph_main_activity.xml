@@ -28,5 +28,7 @@
         android:id="@+id/searchedRecipesFragment"
         android:name="com.example.recipeeer.main.SearchedRecipesFragment"
         android:label="fragment_searched_recipes"
-        tools:layout="@layout/fragment_searched_recipes" /><action android:id="@+id/action_global_favoriteRecipesFragment" app:destination="@id/favoriteRecipesFragment"/><action android:id="@+id/action_global_myRecipesFragment" app:destination="@id/myRecipesFragment"/>
+        tools:layout="@layout/fragment_searched_recipes" />
+    <action android:id="@+id/action_global_favoriteRecipesFragment" app:destination="@id/favoriteRecipesFragment"/>
+    <action android:id="@+id/action_global_myRecipesFragment" app:destination="@id/myRecipesFragment"/>
 </navigation>

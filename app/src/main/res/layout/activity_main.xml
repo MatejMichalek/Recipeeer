@@ -18,15 +18,7 @@ android:background="@color/colorAppBackground">
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/mToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorToolbar"
-                android:elevation="4dp"
-                android:theme="@style/Base.Theme.AppCompat"
-                app:titleTextAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:layout_alignParentTop="true"/>
+            <include layout="@layout/layout_action_bar"></include>
 
             <fragment
                 android:id="@+id/content_frame"

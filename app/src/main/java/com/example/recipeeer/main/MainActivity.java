@@ -3,17 +3,21 @@ package com.example.recipeeer.main;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.createRecipe.CreateRecipeActivity;
 import com.example.recipeeer.login.LogInActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,6 +91,15 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                     return true;
                 }
             });
+
+            FloatingActionButton fab = findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
     }
 
@@ -110,5 +123,16 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
     @Override
     public void updateNavState(int selectedItemID) {
         mNavigationView.setCheckedItem(selectedItemID);
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        Navigation.findNavController(findViewById(R.id.content_frame)).navigateUp();
+//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
