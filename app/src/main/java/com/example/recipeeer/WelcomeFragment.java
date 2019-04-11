@@ -75,6 +75,12 @@ public class WelcomeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.mHome); //just add this line
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -105,4 +111,10 @@ public class WelcomeFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+//    @Override
+//    public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
+//        super.onInflate(context, attrs, savedInstanceState);
+//        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.home); //just add this line
+//    }
 }

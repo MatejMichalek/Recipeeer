@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.recipeeer.login.LogInActivity;
@@ -20,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import androidx.navigation.Navigation;
 
-public class MainActivity extends AppCompatActivity implements WelcomeFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ActivityWithDrawer,WelcomeFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
 
     private FirebaseUser mFirebaseUser;
     private DrawerLayout mDrawerLayout;
@@ -49,19 +50,24 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.O
             Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
 
             mDrawerLayout = findViewById(R.id.drawerLayout);
-
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,mDrawerLayout,mToolbar,R.string.open,R.string.close);
             mDrawerLayout.addDrawerListener(toggle);
             toggle.syncState();
 
             mNavigationView = findViewById(R.id.nav_view);
+            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     // set item as selected to persist highlight
+
                     menuItem.setChecked(true);
                     // close drawer when item is tapped
                     switch (menuItem.getItemId()) {
+                        case R.id.mHome:
+                            Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
+                            break;
+
                         case R.id.logOut:
                             FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(MainActivity.this,LogInActivity.class);
@@ -84,20 +90,25 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.O
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                TextView textView = findViewById(R.id.headerUserName);
-                textView.setText(mFirebaseUser.getDisplayName());
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                mDrawerLayout.openDrawer(GravityCompat.START);
+//                TextView textView = findViewById(R.id.headerUserName);
+//                textView.setText(mFirebaseUser.getDisplayName());
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void updateNavState(int selectedItemID) {
+        mNavigationView.setCheckedItem(selectedItemID);
     }
 }
