@@ -1,4 +1,4 @@
-package com.example.recipeeer;
+package com.example.recipeeer.main;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,16 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.recipeeer.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link WelcomeFragment.OnFragmentInteractionListener} interface
+ * {@link FavoriteRecipesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link WelcomeFragment#newInstance} factory method to
+ * Use the {@link FavoriteRecipesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WelcomeFragment extends Fragment {
+public class FavoriteRecipesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +31,7 @@ public class WelcomeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public WelcomeFragment() {
+    public FavoriteRecipesFragment() {
         // Required empty public constructor
     }
 
@@ -39,11 +41,11 @@ public class WelcomeFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment WelcomeFragment.
+     * @return A new instance of fragment FavoriteRecipesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static WelcomeFragment newInstance(String param1, String param2) {
-        WelcomeFragment fragment = new WelcomeFragment();
+    public static FavoriteRecipesFragment newInstance(String param1, String param2) {
+        FavoriteRecipesFragment fragment = new FavoriteRecipesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -64,7 +66,7 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_welcome, container, false);
+        return inflater.inflate(R.layout.fragment_favorite_recipes, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,7 +79,7 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.mHome); //just add this line
+        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites); //just add this line
     }
 
     @Override
@@ -111,10 +113,10 @@ public class WelcomeFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
+//
 //    @Override
 //    public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
 //        super.onInflate(context, attrs, savedInstanceState);
-//        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.home); //just add this line
+//        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites); //just add this line
 //    }
 }

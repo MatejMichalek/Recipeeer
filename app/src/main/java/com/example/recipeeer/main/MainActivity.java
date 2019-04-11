@@ -1,4 +1,4 @@
-package com.example.recipeeer;
+package com.example.recipeeer.main;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -6,22 +6,21 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
+import com.example.recipeeer.R;
 import com.example.recipeeer.login.LogInActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import androidx.navigation.Navigation;
 
-public class MainActivity extends AppCompatActivity implements ActivityWithDrawer,WelcomeFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, FavoriteRecipesFragment.OnFragmentInteractionListener {
 
     private FirebaseUser mFirebaseUser;
     private DrawerLayout mDrawerLayout;
@@ -56,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
 
             mNavigationView = findViewById(R.id.nav_view);
             ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
+
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

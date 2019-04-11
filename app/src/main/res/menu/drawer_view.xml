@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/mainFeaturesGroup">
         <item
             android:id="@+id/mHome"
             android:icon="@drawable/ic_home_black"
@@ -12,15 +13,22 @@
             android:title="Profile" />
         <item
             android:id="@+id/myRecipes"
-            android:icon="@drawable/google_logo_resized"
+            android:icon="@drawable/ic_my_recipes_black"
             android:title="My recipes" />
         <item
             android:id="@+id/favorites"
             android:icon="@drawable/ic_favorite_black"
             android:title="Favorite recipes" />
     </group>
-    <item
-        android:id="@+id/logOut"
-        android:icon="@drawable/ic_log_out_black"
-        android:title="Log out" />
+    <group
+        android:id="@+id/logOutGroup">
+        <item
+            android:menuCategory="container"
+            android:id="@+id/logOut"
+            android:icon="@drawable/ic_log_out_black"
+            android:title="Log out" />
+
+    </group>
+
+
 </menu>

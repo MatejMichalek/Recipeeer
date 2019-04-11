@@ -6,7 +6,7 @@
     app:startDestination="@id/welcomeFragment">
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.example.recipeeer.WelcomeFragment"
+        android:name="com.example.recipeeer.main.WelcomeFragment"
         android:label="fragment_welcome"
         tools:layout="@layout/fragment_welcome">
         <action
@@ -15,18 +15,18 @@
     </fragment>
     <fragment
         android:id="@+id/myRecipesFragment"
-        android:name="com.example.recipeeer.MyRecipesFragment"
+        android:name="com.example.recipeeer.main.MyRecipesFragment"
         android:label="fragment_my_recipes"
         tools:layout="@layout/fragment_my_recipes" />
     <fragment
         android:id="@+id/favoriteRecipesFragment"
-        android:name="com.example.recipeeer.FavoriteRecipesFragment"
+        android:name="com.example.recipeeer.main.FavoriteRecipesFragment"
         android:label="fragment_favorite_recipes"
         tools:layout="@layout/fragment_favorite_recipes" />
     <action android:id="@+id/action_global_welcomeFragment" app:destination="@id/welcomeFragment" />
     <fragment
         android:id="@+id/searchedRecipesFragment"
-        android:name="com.example.recipeeer.SearchedRecipesFragment"
+        android:name="com.example.recipeeer.main.SearchedRecipesFragment"
         android:label="fragment_searched_recipes"
         tools:layout="@layout/fragment_searched_recipes" /><action android:id="@+id/action_global_favoriteRecipesFragment" app:destination="@id/favoriteRecipesFragment"/><action android:id="@+id/action_global_myRecipesFragment" app:destination="@id/myRecipesFragment"/>
 </navigation>
