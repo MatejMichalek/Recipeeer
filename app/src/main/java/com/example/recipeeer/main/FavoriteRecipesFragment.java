@@ -3,6 +3,7 @@ package com.example.recipeeer.main;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,10 @@ public class FavoriteRecipesFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+
+    private FloatingActionButton fab;
+
 
     public FavoriteRecipesFragment() {
         // Required empty public constructor
@@ -66,6 +71,7 @@ public class FavoriteRecipesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fab = getActivity().findViewById(R.id.fab);
         return inflater.inflate(R.layout.fragment_favorite_recipes, container, false);
     }
 
@@ -79,6 +85,7 @@ public class FavoriteRecipesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        fab.hide();
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites); //just add this line
     }
 

@@ -9,32 +9,47 @@ android:fitsSystemWindows="true"
 tools:context=".main.MainActivity"
 android:background="@color/colorAppBackground">
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/mToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorToolbar"
-            android:elevation="4dp"
-            android:theme="@style/Base.Theme.AppCompat"
-            app:titleTextAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:layout_alignParentTop="true"/>
-
-        <fragment
-            android:id="@+id/content_frame"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:defaultNavHost='true'
-            app:navGraph='@navigation/nav_graph_main_activity'
-            />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/mToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorToolbar"
+                android:elevation="4dp"
+                android:theme="@style/Base.Theme.AppCompat"
+                app:titleTextAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:layout_alignParentTop="true"/>
 
+            <fragment
+                android:id="@+id/content_frame"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:defaultNavHost='true'
+                app:navGraph='@navigation/nav_graph_main_activity'
+                />
+
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:backgroundTint="@color/colorToolbar"
+            android:tint="@android:color/background_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            app:srcCompat="@drawable/ic_plus_black"/>
+
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
