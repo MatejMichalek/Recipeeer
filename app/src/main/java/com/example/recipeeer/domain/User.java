@@ -8,7 +8,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(indices = @Index(value = "email",unique = true))
+@Entity(indices = {@Index(value = "email",unique = true),@Index("id")})
 public class User {
 
     @PrimaryKey(autoGenerate = true)

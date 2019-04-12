@@ -5,11 +5,12 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity (foreignKeys = @ForeignKey(entity = Recipe.class,parentColumns = "recipeid",childColumns = "recipeId",onDelete = CASCADE))
+@Entity (foreignKeys = @ForeignKey(entity = Recipe.class,parentColumns = "recipeid",childColumns = "recipeId",onDelete = CASCADE),indices = {@Index("id"),@Index("recipeId")})
 public class Ingredient {
     @PrimaryKey(autoGenerate = true)
     private int id;

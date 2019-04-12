@@ -7,12 +7,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
 //@Entity(tableName = "recipe")
-@Entity(foreignKeys = @ForeignKey(entity = User.class,parentColumns = "id",childColumns = "userId",onDelete = CASCADE))
+@Entity(foreignKeys = @ForeignKey(entity = User.class,parentColumns = "id",childColumns = "userId",onDelete = CASCADE),indices = {@Index("recipeid"),@Index("userId")})
 public class Recipe {
 
     @PrimaryKey(autoGenerate = true)
