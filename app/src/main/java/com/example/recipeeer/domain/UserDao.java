@@ -4,6 +4,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -15,6 +16,9 @@ public interface UserDao {
     @Query("SELECT * FROM User WHERE email=:email")
     public LiveData<User> getUserByEmail(String email);
 
-    @Query("SELECT * FROM User")
+    @Query("SELECT * FROM User ORDER BY email DESC")
     public LiveData<List<User>> getAllUsers();
+
+    @Query("DELETE FROM User")
+    public void deleteAll();
 }

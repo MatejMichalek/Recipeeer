@@ -3,6 +3,8 @@ package com.example.recipeeer.main;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.NonNull;
+
+import com.example.recipeeer.domain.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
@@ -11,9 +13,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
     private FirebaseUser mFirebaseUser;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,16 +107,21 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             });
 
             FloatingActionButton fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
-                    startActivity(intent);
-//                    Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.createRecipeActivity);
-                }
-            });
-
-
+//            fab.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent replyIntent = new Intent();
+//                    replyIntent.putExtra("email", "NewEmail");
+//                    replyIntent.putExtra("name", "NewName");
+//                    replyIntent.putExtra("age", 15);
+//                    replyIntent.putExtra("gender", 2);
+//                    setResult(RESULT_OK, replyIntent);
+//
+////                    Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
+////                    startActivity(intent);
+//////                    Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.createRecipeActivity);
+//                }
+//            });
         }
     }
 

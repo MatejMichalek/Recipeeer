@@ -1,12 +1,17 @@
 package com.example.recipeeer.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserListAdapter;
+import com.example.recipeeer.domain.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.recipeeer.R;
+
+import java.util.List;
 
 
 /**
@@ -40,6 +47,8 @@ public class WelcomeFragment extends Fragment {
 
 
     private FloatingActionButton fab;
+    private UserViewModel mUserViewModel;
+    private UserListAdapter adapter;
 
 
     public WelcomeFragment() {
@@ -76,10 +85,33 @@ public class WelcomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        mUserViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> users) {
+                adapter.setUsers(users);
+            }
+        });
+
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User user = new User("NewEmail","NewName",15,2);
+                mUserViewModel.insert(user);
 
-        return inflater.inflate(R.layout.fragment_welcome, container, false);
+            }
+        });
+
+        View view = inflater.inflate(R.layout.fragment_welcome, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        adapter = new UserListAdapter(getActivity());
+        recyclerView.setAdapter(adapter);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -92,16 +124,14 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
         super.onInflate(context, attrs, savedInstanceState);
-        RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView);
-        final UserListAdapter adapter = new UserListAdapter(getActivity());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         fab.show();
+
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.mHome); //just add this line
     }
 
