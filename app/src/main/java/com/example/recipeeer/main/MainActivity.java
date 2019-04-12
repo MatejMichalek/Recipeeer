@@ -11,6 +11,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.createRecipe.CreateRecipeActivity;
+import com.example.recipeeer.domain.UserListAdapter;
 import com.example.recipeeer.login.LogInActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -105,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
 //                    Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.createRecipeActivity);
                 }
             });
+
+            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+            final UserListAdapter adapter = new UserListAdapter(this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
     }
 
