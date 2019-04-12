@@ -1,8 +1,6 @@
 package com.example.recipeeer.domain;
 
-import android.support.annotation.NonNull;
-
-import java.util.List;
+import androidx.annotation.NonNull;
 
 
 import androidx.room.ColumnInfo;

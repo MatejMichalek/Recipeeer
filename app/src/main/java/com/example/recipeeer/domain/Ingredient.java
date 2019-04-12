@@ -1,6 +1,6 @@
 package com.example.recipeeer.domain;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity (foreignKeys = @ForeignKey(entity = Recipe.class,parentColumns = "id",childColumns = "recipeId",onDelete = CASCADE))
+@Entity (foreignKeys = @ForeignKey(entity = Recipe.class,parentColumns = "recipeid",childColumns = "recipeId",onDelete = CASCADE))
 public class Ingredient {
     @PrimaryKey(autoGenerate = true)
     private int id;

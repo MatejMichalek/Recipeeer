@@ -1,12 +1,11 @@
 package com.example.recipeeer.createRecipe;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.recipeeer.R;
-import com.example.recipeeer.main.ActivityWithDrawer;
 
 public class CreateRecipeActivity extends AppCompatActivity {
 
