@@ -14,7 +14,7 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
 
     private static volatile RecipeeerDatabase INSTANCE;
 
-    static RecipeeerDatabase getDatabase(final Context context) {
+    public static RecipeeerDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (RecipeeerDatabase.class) {
                 if (INSTANCE == null) {
@@ -22,7 +22,7 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             RecipeeerDatabase.class,
                             "recipeeer_db")
-                            .addCallback(sRoomDatabaseCallback)
+//                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }

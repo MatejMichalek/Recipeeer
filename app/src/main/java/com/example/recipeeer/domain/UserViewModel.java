@@ -27,4 +27,8 @@ public class UserViewModel extends AndroidViewModel {
     public void insert(User user) {
         userRepository.insert(user);
     }
+
+    public User getCurrentUserByEmail(String email) {
+        return userRepository.getCurrentUserByEmail(email);
+    }
 }

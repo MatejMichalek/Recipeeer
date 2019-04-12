@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.recipeeer.domain.RecipeeerDatabase;
 import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserListAdapter;
 import com.example.recipeeer.domain.UserViewModel;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.recipeeer.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -95,14 +97,14 @@ public class WelcomeFragment extends Fragment {
 
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User user = new User("NewEmail","NewName",15,2);
-                mUserViewModel.insert(user);
-
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                User user = new User("NewEmail","NewName",15,2);
+//                mUserViewModel.insert(user);
+//
+//            }
+//        });
 
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 

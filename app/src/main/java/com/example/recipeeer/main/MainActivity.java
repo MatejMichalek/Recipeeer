@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 
+import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -14,6 +15,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
     private FirebaseUser mFirebaseUser;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private UserViewModel mUserViewModel;
 
 
     @Override
@@ -52,6 +56,20 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             finish();
         }
         else {
+
+
+            mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+            User user = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
+
+            mNavigationView = findViewById(R.id.nav_view);
+//            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
+            if (user == null) {
+                mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),-1,2));
+                user = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
+            }
+            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(String.valueOf(user.getAge()));
+
+
             Toolbar mToolbar = findViewById(R.id.mToolbar);
             setSupportActionBar(mToolbar);
 
@@ -67,8 +85,6 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             mDrawerLayout.addDrawerListener(toggle);
             toggle.syncState();
 
-            mNavigationView = findViewById(R.id.nav_view);
-            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
 
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override

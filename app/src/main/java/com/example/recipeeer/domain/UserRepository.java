@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
 
@@ -25,6 +26,21 @@ public class UserRepository {
         new insertAsyncTask(userDao).execute(user);
     }
 
+    public User getCurrentUserByEmail(String email) {
+//        return userDao.getUserByEmail(email);
+        try {
+            return new getCurrentUserByEmailAsyncTask(userDao).execute(email).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
     private static class insertAsyncTask extends AsyncTask<User,Void,Void> {
 
         private UserDao asyncTaskDao;
@@ -38,6 +54,19 @@ public class UserRepository {
         protected Void doInBackground(User... users) {
             asyncTaskDao.insert(users[0]);
             return null;
+        }
+    }
+
+    private static class getCurrentUserByEmailAsyncTask extends AsyncTask<String,Void,User> {
+        private UserDao asyncTaskDao;
+
+        public getCurrentUserByEmailAsyncTask(UserDao userDao) {
+            asyncTaskDao = userDao;
+        }
+
+        @Override
+        protected User doInBackground(String... strings) {
+           return asyncTaskDao.getUserByEmail(strings[0]);
         }
     }
 }
