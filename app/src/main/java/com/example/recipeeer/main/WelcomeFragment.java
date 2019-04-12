@@ -108,7 +108,7 @@ public class WelcomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_users);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         adapter = new UserListAdapter(getActivity());

@@ -17,10 +17,10 @@
             android:text="Welcome fragment" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerView_users"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/recyclerview_item" />
+            tools:listitem="@layout/recyclerview_users_item" />
 
     </LinearLayout>
 

@@ -3,13 +3,25 @@ package com.example.recipeeer.main;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+
+import com.example.recipeeer.domain.MyRecipesListAdapter;
+import com.example.recipeeer.domain.Recipe;
+import com.example.recipeeer.domain.RecipeViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.recipeeer.R;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
 
 
 /**
@@ -31,7 +43,10 @@ public class MyRecipesFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
     private FloatingActionButton fab;
+    private RecipeViewModel mRecipeViewModel;
+    private MyRecipesListAdapter mAdapter;
 
     public MyRecipesFragment() {
         // Required empty public constructor
@@ -67,9 +82,26 @@ public class MyRecipesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mRecipeViewModel.getAllMyRecipes(FirebaseAuth.getInstance().getCurrentUser().getEmail()).observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(List<Recipe> recipes) {
+                mAdapter.setMyRecipes(recipes);
+            }
+        });
+
+
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
-        return inflater.inflate(R.layout.fragment_my_recipes, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_my_recipes, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_myRecipes);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mAdapter = new MyRecipesListAdapter(getActivity());
+        recyclerView.setAdapter(mAdapter);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -24,7 +24,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
     @NonNull
     @Override
     public UserListAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View itemView = inflater.inflate(R.layout.recyclerview_item,viewGroup,false);
+        View itemView = inflater.inflate(R.layout.recyclerview_users_item,viewGroup,false);
         return new UserViewHolder(itemView);
     }
 
@@ -32,10 +32,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
     public void onBindViewHolder(@NonNull UserListAdapter.UserViewHolder userViewHolder, int i) {
         if (users != null) {
             User current = users.get(i);
-            userViewHolder.userItemView.setText(current.getEmail());
+            userViewHolder.userNameView.setText(String.valueOf(current.getId()));
         }
         else {
-            userViewHolder.userItemView.setText("No user");
+            userViewHolder.userNameView.setText("No user");
         }
     }
 
@@ -54,11 +54,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView userItemView;
+        private final TextView userNameView;
 
         private UserViewHolder(@NonNull View itemView) {
             super(itemView);
-            userItemView = itemView.findViewById(R.id.recyclerViewItemText);
+            userNameView = itemView.findViewById(R.id.recyclerViewItemUsernameText);
         }
     }
 }
