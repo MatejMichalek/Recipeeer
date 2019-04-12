@@ -3,8 +3,10 @@ package com.example.recipeeer.createRecipe;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.main.ActivityWithDrawer;
 
 public class CreateRecipeActivity extends AppCompatActivity {
 
@@ -18,4 +20,19 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        ((ActivityWithDrawer)getParent()).backPressed();
+//    }
 }

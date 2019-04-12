@@ -3,6 +3,7 @@ package com.example.recipeeer.main;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ public class MyRecipesFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
     public MyRecipesFragment() {
         // Required empty public constructor
@@ -66,6 +68,7 @@ public class MyRecipesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fab = getActivity().findViewById(R.id.fab);
         return inflater.inflate(R.layout.fragment_my_recipes, container, false);
     }
 
@@ -74,6 +77,13 @@ public class MyRecipesFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fab.show();
+        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.myRecipes); //just add this line
     }
 
     @Override

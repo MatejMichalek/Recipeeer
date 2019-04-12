@@ -23,13 +23,25 @@
                       <LayoutPositions />
                     </value>
                   </entry>
+                  <entry key="createRecipeActivity">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="548" />
+                            <option name="y" value="-299" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="favoriteRecipesFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="500" />
-                            <option name="y" value="-268" />
+                            <option name="x" value="-183" />
+                            <option name="y" value="119" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -40,8 +52,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="498" />
-                            <option name="y" value="112" />
+                            <option name="x" value="50" />
+                            <option name="y" value="40" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -64,12 +76,17 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="15" />
-                            <option name="y" value="-26" />
+                            <option name="x" value="-198" />
+                            <option name="y" value="-288" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_welcomeFragment_to_createRecipeActivity">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_welcomeFragment_to_searchedRecipesFragment">
                               <value>
                                 <LayoutPositions />

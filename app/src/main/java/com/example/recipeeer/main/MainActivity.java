@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import androidx.navigation.Navigation;
 
-public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, FavoriteRecipesFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, MyRecipesFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
 
     private FirebaseUser mFirebaseUser;
     private DrawerLayout mDrawerLayout;
@@ -72,15 +72,19 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                             Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
                             break;
 
+                        case R.id.myRecipes:
+                            Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_myRecipesFragment);
+                            break;
+
+                        case R.id.favorites:
+                            Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_favoriteRecipesFragment);
+                            break;
+
                         case R.id.logOut:
                             FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(MainActivity.this,LogInActivity.class);
                             startActivity(intent);
                             finish();
-                            break;
-
-                        case R.id.favorites:
-                            Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_favoriteRecipesFragment);
                             break;
                     }
                     mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
                     startActivity(intent);
+//                    Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.createRecipeActivity);
                 }
             });
         }
@@ -126,6 +131,11 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
     }
 
 //    @Override
+//    public void backPressed() {
+//        Navigation.findNavController(findViewById(R.id.content_frame)).navigateUp();
+//    }
+
+    //    @Override
 //    public void onBackPressed() {
 //        super.onBackPressed();
 //        Navigation.findNavController(findViewById(R.id.content_frame)).navigateUp();
