@@ -1,4 +1,4 @@
-package com.example.recipeeer;
+package com.example.recipeeer.createRecipe;
 
 import android.content.Context;
 import android.util.AttributeSet;
