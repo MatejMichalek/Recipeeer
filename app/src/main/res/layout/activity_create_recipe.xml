@@ -7,7 +7,7 @@
     tools:context=".createRecipe.CreateRecipeActivity"
     android:background="@color/colorAppBackground">
 
-    <com.example.recipeeer.CustomScrollView
+    <com.example.recipeeer.createRecipe.CustomScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -56,9 +56,10 @@
                     android:layout_height="150dp"
                     android:src="@drawable/img_not_found"
                     android:scaleType="fitCenter"
-                    android:tint="@color/colorToolbar"
+                    android:id="@+id/recipeImage"
                     />
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/uploadImage_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -184,10 +185,10 @@
 
 
                 <EditText
-                    android:id="@+id/instructions"
+                    android:id="@+id/editInstructions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxHeight="300dp"
+                    android:maxHeight="270dp"
                     android:layout_marginBottom="?actionBarSize"
                     android:ems="10"
                     android:inputType="textAutoComplete|textAutoCorrect|textMultiLine|text"
@@ -197,7 +198,7 @@
 
             </LinearLayout>
         </LinearLayout>
-    </com.example.recipeeer.CustomScrollView>
+    </com.example.recipeeer.createRecipe.CustomScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:layout_width="wrap_content"
@@ -210,7 +211,7 @@
         app:layout_anchor="@id/gggg"
         app:layout_anchorGravity="bottom|center"
         android:enabled="false"
-
+        android:id="@+id/saveRecipe"
         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

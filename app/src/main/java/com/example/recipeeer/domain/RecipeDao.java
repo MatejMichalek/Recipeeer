@@ -10,7 +10,7 @@ import androidx.room.Query;
 @Dao
 public interface RecipeDao {
     @Insert
-    public void insert(Recipe recipe);
+    public long insert(Recipe recipe);
 
     @Query("SELECT r.recipeid,r.name,r.preparationTime,r.instruction,r.userId " +
             "FROM Recipe r, User u WHERE r.userId=u.id AND u.email=:email")

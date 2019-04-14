@@ -39,6 +39,7 @@ import androidx.navigation.Navigation;
 public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, MyRecipesFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
 
     private FirebaseUser mFirebaseUser;
+    private User currentUser;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private UserViewModel mUserViewModel;
@@ -59,15 +60,15 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
 
 
             mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-            User user = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
+            currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
 
             mNavigationView = findViewById(R.id.nav_view);
 //            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
-            if (user == null) {
+            if (currentUser == null) {
                 mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),-1,2));
-                user = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
+                currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
             }
-            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(String.valueOf(user.getAge()));
+            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(currentUser.getName());
 
 
             Toolbar mToolbar = findViewById(R.id.mToolbar);
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
 //                    setResult(RESULT_OK, replyIntent);
 
                     Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
+                    intent.putExtra("currentUserID",currentUser.getId());
                     startActivity(intent);
 ////                    Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.createRecipeActivity);
                 }
