@@ -17,9 +17,11 @@ public class MyRecipesListAdapter extends RecyclerView.Adapter<MyRecipesListAdap
 
     private final LayoutInflater inflater;
     private List<Recipe> myRecipes;
+    private final OnListItemClickListener mOnListItemClickListener;
 
-    public MyRecipesListAdapter(Context context) {
+    public MyRecipesListAdapter(Context context, OnListItemClickListener mOnListItemClickListener) {
         inflater = LayoutInflater.from(context);
+        this.mOnListItemClickListener = mOnListItemClickListener;
     }
 
     @NonNull
@@ -34,8 +36,7 @@ public class MyRecipesListAdapter extends RecyclerView.Adapter<MyRecipesListAdap
         if (myRecipes != null) {
             Recipe recipe = myRecipes.get(position);
             holder.recipeNameView.setText(recipe.getName());
-            holder.authorNameView.setText(String.valueOf(recipe.getUserId()));
-            holder.preparationTimeView.setText(String.valueOf(recipe.getPreparationTime()));
+            holder.preparationTimeView.setText(String.valueOf(recipe.getPreparationTime()+" min"));
         }
         else {
             holder.recipeNameView.setText("No recipe");
@@ -56,17 +57,26 @@ public class MyRecipesListAdapter extends RecyclerView.Adapter<MyRecipesListAdap
     }
 
 
-    public class RecipeViewHolder extends RecyclerView.ViewHolder {
+    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView recipeNameView;
-        private final TextView authorNameView;
         private final TextView preparationTimeView;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
             recipeNameView = itemView.findViewById(R.id.recyclerViewItemRecipeNameText);
-            authorNameView = itemView.findViewById(R.id.recyclerViewItemRecipeUserNameText);
             preparationTimeView = itemView.findViewById(R.id.recyclerViewItemRecipeTimeText);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            Recipe recipe = myRecipes.get(getAdapterPosition());
+            mOnListItemClickListener.onListItemClick(recipe.getId(),recipe.getUserId());
+        }
+    }
+
+    public interface OnListItemClickListener {
+        void onListItemClick(int recipeID, int authorID);
     }
 }

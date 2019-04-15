@@ -10,6 +10,8 @@ import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserListAdapter;
 import com.example.recipeeer.domain.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -133,7 +135,7 @@ public class WelcomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fab.show();
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.mHome); //just add this line
     }
 

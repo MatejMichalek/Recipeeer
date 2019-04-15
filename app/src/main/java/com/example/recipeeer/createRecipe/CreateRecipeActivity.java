@@ -73,6 +73,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("New recipe");
 
         Button uploadImgBtn = findViewById(R.id.uploadImage_btn);
         uploadImgBtn.setOnClickListener(new View.OnClickListener() {

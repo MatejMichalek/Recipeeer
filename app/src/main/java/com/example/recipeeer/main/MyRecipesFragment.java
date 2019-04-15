@@ -1,13 +1,17 @@
 package com.example.recipeeer.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.recipeeer.domain.MyRecipesListAdapter;
 import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeViewModel;
+import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.recipeeer.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +37,7 @@ import java.util.List;
  * Use the {@link MyRecipesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyRecipesFragment extends Fragment {
+public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.OnListItemClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -99,7 +104,7 @@ public class MyRecipesFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_myRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new MyRecipesListAdapter(getActivity());
+        mAdapter = new MyRecipesListAdapter(getActivity(), this);
         recyclerView.setAdapter(mAdapter);
         return view;
     }
@@ -115,6 +120,7 @@ public class MyRecipesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fab.show();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My recipes");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.myRecipes); //just add this line
     }
 
@@ -133,6 +139,16 @@ public class MyRecipesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onListItemClick(int recipeID, int authorID) {
+        Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
+        intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
+        intent.putExtra("recipeID",recipeID);
+        intent.putExtra("authorID",authorID);
+        Toast.makeText(getActivity(),"Recipe: "+String.valueOf(recipeID)+" Author: "+String.valueOf(authorID)+" Current: "+String.valueOf(((MainActivity) getActivity()).getCurrentUser().getId()),Toast.LENGTH_LONG).show();
+        startActivity(intent);
     }
 
     /**

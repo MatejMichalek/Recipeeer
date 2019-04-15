@@ -176,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
 //        Navigation.findNavController(findViewById(R.id.content_frame)).navigateUp();
 //    }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

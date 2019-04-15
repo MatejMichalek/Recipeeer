@@ -2,28 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/recyclerViewItemRecipeNameText"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:layout_height="wrap_content"
+    android:background="@drawable/my_recipe_item"
+    android:layout_marginTop="7dp"
+    android:padding="10dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/recyclerViewItemRecipeUserNameText"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/recyclerViewItemRecipeTimeText"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="7dp">
+
+            <TextView
+                android:id="@+id/recyclerViewItemRecipeNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_medium"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="15dp"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="Preparation time:"/>
+
+                <TextView
+                    android:id="@+id/recyclerViewItemRecipeTimeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/roboto_medium"/>
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_keyboard_arrow_right_black"/>
 
     </LinearLayout>
 

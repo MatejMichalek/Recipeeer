@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +88,7 @@ public class FavoriteRecipesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fab.hide();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favourite recipes");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites); //just add this line
     }
 

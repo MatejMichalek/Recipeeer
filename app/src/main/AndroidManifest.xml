@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="true" />
@@ -19,13 +20,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".recipeDetails.RecipeDetailsActivity"></activity>
         <activity
             android:name=".createRecipe.CreateRecipeActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".main.MainActivity">
+            android:parentActivityName=".main.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".main.MainActivity"/>
+                android:value=".main.MainActivity" />
         </activity>
         <activity android:name=".login.LogInActivity" />
         <activity android:name=".main.MainActivity">
