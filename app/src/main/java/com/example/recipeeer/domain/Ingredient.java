@@ -18,7 +18,6 @@ public class Ingredient {
     @NonNull
     private String value;
 
-    @NonNull
     private int recipeId;
 
     public Ingredient(int id, @NonNull String value, int recipeId) {
@@ -28,9 +27,8 @@ public class Ingredient {
     }
 
     @Ignore
-    public Ingredient(@NonNull String value, int recipeId) {
+    public Ingredient(@NonNull String value) {
         this.value = value;
-        this.recipeId = recipeId;
     }
 
     public int getId() {
@@ -44,5 +42,9 @@ public class Ingredient {
 
     public int getRecipeId() {
         return recipeId;
+    }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 }

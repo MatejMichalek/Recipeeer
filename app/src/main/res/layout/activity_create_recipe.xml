@@ -132,6 +132,10 @@
                             android:id="@+id/ingredients"
                             android:orientation="vertical">
 
+                            <!--<include layout="@layout/layout_ingredient_item"-->
+                                <!--android:visibility="visible"></include>-->
+
+
                         </LinearLayout>
 
                         <LinearLayout
@@ -140,15 +144,15 @@
                             android:orientation="horizontal"
                             android:layout_marginStart="8dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:maxWidth="50dp"
-                                android:layout_height="match_parent"
-                                android:gravity="center|end"
-                                android:text="1."
-                                android:id="@+id/ingredientNo"
-                                android:textSize="20sp"
-                                android:textStyle="bold"/>
+                            <!--<TextView-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:maxWidth="50dp"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:gravity="center|end"-->
+                                <!--android:text="1."-->
+                                <!--android:id="@+id/editIngredientNo"-->
+                                <!--android:textSize="20sp"-->
+                                <!--android:textStyle="bold"/>-->
 
                             <EditText
                                 android:layout_width="0dp"
@@ -156,13 +160,15 @@
                                 android:layout_height="match_parent"
                                 android:id="@+id/editIngredient"
                                 android:maxLines="1"
-                                android:inputType="text"/>
+                                android:inputType="text"
+                                android:layout_marginStart="15dp"/>
 
                             <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/addIngredient"
                                 android:layout_width="50dp"
                                 android:layout_height="match_parent"
                                 android:text="Add"
+                                android:enabled="false"
                                 android:textColor="@color/colorToolbar"
                                 style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"/>
 

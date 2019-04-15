@@ -4,12 +4,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -18,25 +21,27 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.domain.Ingredient;
+import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeViewModel;
-import com.example.recipeeer.domain.User;
-import com.example.recipeeer.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
 
 
 public class CreateRecipeActivity extends AppCompatActivity {
@@ -47,11 +52,15 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private ImageView image;
     private RecipeViewModel mRecipeViewModel;
+    private IngredientViewModel mIngredientViewModel;
     private EditText editName;
     private EditText editPreparationTime;
     private EditText editIngredients;
     private EditText editInstructions;
     private int currentUserID;
+    private AppCompatButton addIngredientButton;
+    private LinearLayout addedIngredientsFrame;
+    private Button saveRecipeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +82,36 @@ public class CreateRecipeActivity extends AppCompatActivity {
             }
         });
 
+        mIngredientViewModel = ViewModelProviders.of(CreateRecipeActivity.this).get(IngredientViewModel.class);
+        addedIngredientsFrame = findViewById(R.id.ingredients);
+
         editName = findViewById(R.id.editName);
         editPreparationTime = findViewById(R.id.editTime);
         editIngredients = findViewById(R.id.editIngredient);
         editInstructions = findViewById(R.id.editInstructions);
+        addIngredientButton = findViewById(R.id.addIngredient);
+        addIngredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.layout_ingredient_item,addedIngredientsFrame,false);
+                Ingredient ingredient = new Ingredient(editIngredients.getText().toString());
+                int ingredientNo = mIngredientViewModel.addIngredient(ingredient);
+                ((TextView) view.findViewWithTag("IngredientText")).setText(editIngredients.getText().toString());
+                ((LinearLayout) view).getChildAt(2).setTag(ingredientNo-1);
+
+                editIngredients.setText("");
+                addedIngredientsFrame.addView(view);
+                checkInputField();
+            }
+        });
         image = findViewById(R.id.recipeImage);
 
 
 
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
-        final Button saveRecipeBtn = findViewById(R.id.saveRecipe);
+        saveRecipeBtn = findViewById(R.id.saveRecipe);
         TextWatcher mWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -95,20 +123,18 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
             }
 
+
             @Override
             public void afterTextChanged(Editable s) {
-                if (checkInputField()) {
-                    saveRecipeBtn.setEnabled(true);
+                if (getCurrentFocus().getId() == editIngredients.getId()) {
+                    addIngredientButton.setEnabled(editIngredients.getText().length()>0);
                 }
                 else {
-                    saveRecipeBtn.setEnabled(false);
+                    checkInputField();
                 }
             }
-
-            private boolean checkInputField() {
-                return editName.getText().length()>0 && editPreparationTime.getText().length()>0 && editIngredients.getText().length()>0 && editInstructions.getText().length()>0;
-            }
         };
+
         editName.addTextChangedListener(mWatcher);
         editPreparationTime.addTextChangedListener(mWatcher);
         editIngredients.addTextChangedListener(mWatcher);
@@ -119,7 +145,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Recipe recipe = new Recipe(editName.getText().toString(),Integer.parseInt(editPreparationTime.getText().toString()),editInstructions.getText().toString(),currentUserID);
                 int id = mRecipeViewModel.insert(recipe);
+                mIngredientViewModel.insertIngredientsForRecipe(id);
                 Toast.makeText(CreateRecipeActivity.this,String.valueOf(id),Toast.LENGTH_LONG).show();
+                finish();
             }
         });
     }
@@ -231,5 +259,26 @@ public class CreateRecipeActivity extends AppCompatActivity {
             e1.printStackTrace();
         }
         return "";
+    }
+
+    private void checkInputField() {
+        boolean isReady = editName.getText().length()>0 && editPreparationTime.getText().length()>0 && addedIngredientsFrame.getChildCount()>0 && editInstructions.getText().length()>0;
+        if (isReady) {
+            saveRecipeBtn.setEnabled(true);
+        }
+        else {
+            saveRecipeBtn.setEnabled(false);
+        }
+    }
+
+    public void removeIngredient(View view) {
+        int ingredientIndex = Integer.parseInt(view.getTag().toString());
+        int noOfLeftIngredients =  mIngredientViewModel.removeIngredient(ingredientIndex);
+        for (int i = ingredientIndex+1;i<=noOfLeftIngredients;i++) {
+            addedIngredientsFrame.getChildAt(i).findViewWithTag(i).setTag(i-1);
+        }
+        addedIngredientsFrame.removeView((View) view.getParent());
+        ((LinearLayout) view.getParent()).setVisibility(View.GONE);
+        checkInputField();
     }
 }
