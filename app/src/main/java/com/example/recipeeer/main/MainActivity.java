@@ -11,6 +11,7 @@ import com.example.recipeeer.R;
 import com.example.recipeeer.createRecipe.CreateRecipeActivity;
 import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserViewModel;
+import com.example.recipeeer.domain.UserViewModelFactory;
 import com.example.recipeeer.login.LogInActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -49,16 +51,31 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
         else {
 
 
-            mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-            currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
-
+            mUserViewModel = ViewModelProviders.of(this,new UserViewModelFactory(getApplication(),mFirebaseUser.getEmail())).get(UserViewModel.class);
+//            currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
+//
             mNavigationView = findViewById(R.id.nav_view);
-//            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
-            if (currentUser == null) {
-                mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),2));
-                currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
-            }
-            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(currentUser.getName());
+////            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
+//            if (currentUser == null) {
+//                mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),2));
+//                currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
+//            }
+
+//            if(mUserViewModel.checkIfUserExists(mFirebaseUser.getEmail())) {
+//
+//            }
+
+            mUserViewModel.getUser().observe(this, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    if (user != null) {
+                        ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(user.getName());
+                    }
+                }
+            });
+            mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),2));
+
+
 
 
             Toolbar mToolbar = findViewById(R.id.mToolbar);

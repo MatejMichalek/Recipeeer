@@ -12,11 +12,14 @@ public class UserViewModel extends AndroidViewModel {
 
     private UserRepository userRepository;
     private LiveData<List<User>> allUsers;
+    private LiveData<User> currentUser;
 
-    public UserViewModel(@NonNull Application application) {
+
+    public UserViewModel(@NonNull Application application, String email) {
         super(application);
         userRepository = new UserRepository(application);
         allUsers = userRepository.getAllUsers();
+        currentUser = userRepository.getUserByEmail(email);
     }
 
 
@@ -30,5 +33,16 @@ public class UserViewModel extends AndroidViewModel {
 
     public User getCurrentUserByEmail(String email) {
         return userRepository.getCurrentUserByEmail(email);
+    }
+
+    public LiveData<User> getUser() {
+        return currentUser;
+    }
+
+    public boolean checkIfUserExists(String email) {
+        if (userRepository.checkIfUserExists(email) == 1) {
+            return true;
+        }
+        return false;
     }
 }

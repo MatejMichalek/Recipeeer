@@ -11,27 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center"
         android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:paddingVertical="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:text="Email:"
-                android:layout_marginEnd="7dp"/>
 
             <TextView
                 android:id="@+id/userEmailText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textSize="25sp"/>
 
         </LinearLayout>
@@ -54,7 +47,7 @@
                 android:id="@+id/usernameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:enabled="false"
                 android:textSize="25sp"
                 android:inputType="text"/>
 
@@ -71,13 +64,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
                 android:textStyle="bold"
+                android:layout_marginEnd="7dp"
                 android:text="Gender:"/>
 
             <Spinner
                 android:id="@+id/userGenderSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="false">
+                android:popupBackground="@drawable/sign_in_btn">
             </Spinner>
 
         </LinearLayout>

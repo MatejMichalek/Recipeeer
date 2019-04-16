@@ -1,6 +1,7 @@
 package com.example.recipeeer.domain;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class UserRepository {
     }
 
     public User getCurrentUserByEmail(String email) {
-//        return userDao.getUserByEmail(email);
+//        return userDao.getCurrentUserByEmail(email);
         try {
             return new getCurrentUserByEmailAsyncTask(userDao).execute(email).get();
         } catch (ExecutionException e) {
@@ -39,6 +40,21 @@ public class UserRepository {
         }
     }
 
+    public int checkIfUserExists(String email) {
+        try {
+            return new userExistsAsyncTask(userDao).execute(email).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return -1;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public LiveData<User> getUserByEmail(String email) {
+        return userDao.getUserByEmail(email);
+    }
 
 
     private static class insertAsyncTask extends AsyncTask<User,Void,Void> {
@@ -52,7 +68,12 @@ public class UserRepository {
 
         @Override
         protected Void doInBackground(User... users) {
-            asyncTaskDao.insert(users[0]);
+            try {
+                asyncTaskDao.insert(users[0]);
+            } catch (SQLiteConstraintException e) {
+                // user is already in db
+                return null;
+            }
             return null;
         }
     }
@@ -66,7 +87,20 @@ public class UserRepository {
 
         @Override
         protected User doInBackground(String... strings) {
-           return asyncTaskDao.getUserByEmail(strings[0]);
+           return asyncTaskDao.getCurrentUserByEmail(strings[0]);
+        }
+    }
+
+    private static class userExistsAsyncTask  extends AsyncTask<String,Void,Integer> {
+        private UserDao asyncTaskDao;
+
+        public userExistsAsyncTask(UserDao userDao) {
+            asyncTaskDao = userDao;
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            return asyncTaskDao.userExists(strings[0]);
         }
     }
 }

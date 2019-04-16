@@ -12,4 +12,9 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
+    <style name="SpinnerStyle">
+        <item name="android:textSize">25sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
 </resources>

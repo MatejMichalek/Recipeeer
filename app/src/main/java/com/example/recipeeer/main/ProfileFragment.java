@@ -6,11 +6,21 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.domain.User;
+import com.example.recipeeer.domain.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -21,7 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,6 +43,8 @@ public class ProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton fab;
+    private UserViewModel mUserViewModel;
+    private Spinner mSpinner;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -71,8 +83,28 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
 
+        mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        mUserViewModel.getUser().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+                    ((TextView) getActivity().findViewById(R.id.userEmailText)).setText(user.getEmail());
+                    ((EditText) getActivity().findViewById(R.id.usernameEdit)).setText(user.getName());
+                    mSpinner.setSelection(user.getGender());
+                }
+            }
+        });
 
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+
+        mSpinner = view.findViewById(R.id.userGenderSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.gender_array, R.layout.layout_spinner_item);
+        adapter.setDropDownViewResource(R.layout.layout_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+        mSpinner.setEnabled(false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -88,6 +120,8 @@ public class ProfileFragment extends Fragment {
         fab.hide();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My profile");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.profile);
+
+        
     }
 
     @Override
@@ -105,6 +139,16 @@ public class ProfileFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     /**
