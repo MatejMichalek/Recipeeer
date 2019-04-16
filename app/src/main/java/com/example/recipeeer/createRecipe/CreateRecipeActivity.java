@@ -96,7 +96,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.layout_ingredient_item,addedIngredientsFrame,false);
-                Ingredient ingredient = new Ingredient(editIngredients.getText().toString());
+                Ingredient ingredient = new Ingredient(editIngredients.getText().toString().trim());
                 int ingredientNo = mIngredientViewModel.addIngredient(ingredient);
                 ((TextView) view.findViewWithTag("IngredientText")).setText(editIngredients.getText().toString());
                 ((LinearLayout) view).getChildAt(2).setTag(ingredientNo-1);
@@ -144,7 +144,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         saveRecipeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Recipe recipe = new Recipe(editName.getText().toString(),Integer.parseInt(editPreparationTime.getText().toString()),editInstructions.getText().toString(),currentUserID);
+                Recipe recipe = new Recipe(editName.getText().toString().trim(),Integer.parseInt(editPreparationTime.getText().toString().trim()),editInstructions.getText().toString().trim(),currentUserID);
                 int id = mRecipeViewModel.insert(recipe);
                 mIngredientViewModel.insertIngredientsForRecipe(id);
                 Toast.makeText(CreateRecipeActivity.this,String.valueOf(id),Toast.LENGTH_LONG).show();
@@ -263,7 +263,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
     }
 
     private void checkInputField() {
-        boolean isReady = editName.getText().length()>0 && editPreparationTime.getText().length()>0 && addedIngredientsFrame.getChildCount()>0 && editInstructions.getText().length()>0;
+        boolean isReady = editName.getText().toString().trim().length()>0 && editPreparationTime.getText().toString().trim().length()>0 && addedIngredientsFrame.getChildCount()>0 && editInstructions.getText().toString().trim().length()>0;
         if (isReady) {
             saveRecipeBtn.setEnabled(true);
         }
@@ -281,6 +281,5 @@ public class CreateRecipeActivity extends AppCompatActivity {
         addedIngredientsFrame.removeView((View) view.getParent());
         ((LinearLayout) view.getParent()).setVisibility(View.GONE);
         checkInputField();
-        LinearLayout lin;
     }
 }

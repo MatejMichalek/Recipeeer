@@ -17,7 +17,7 @@
             android:title="My recipes" />
         <item
             android:id="@+id/favorites"
-            android:icon="@drawable/ic_favorite_black"
+            android:icon="@drawable/ic_favorite"
             android:title="Favorite recipes" />
     </group>
     <group

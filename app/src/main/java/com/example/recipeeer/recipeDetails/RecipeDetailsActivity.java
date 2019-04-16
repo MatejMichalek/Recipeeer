@@ -35,10 +35,17 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private TextView mInstructions;
     private ImageView mImage;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
+
+        if (isMyRecipe()) {
+            findViewById(R.id.authorFrame).setVisibility(View.GONE);
+
+        }
+
 
         Toolbar mToolbar = findViewById(R.id.mToolbar);
         setSupportActionBar(mToolbar);
@@ -82,6 +89,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Recipe details");
     }
 
+    private boolean isMyRecipe() {
+        try {
+            int currentUserID = getIntent().getExtras().getInt("currentUserID");
+            int authorID = getIntent().getExtras().getInt("authorID");
+            return currentUserID==authorID;
+        }
+        catch (NullPointerException e) {
+            finish();
+            return false;
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -94,6 +113,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     finish();
                     return true;
                 }
+            case R.id.action_favorite:
+                //TODO
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -101,7 +122,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.recipe_details_bar_menu,menu);
+        if (isMyRecipe()) {
+            getMenuInflater().inflate(R.menu.my_recipe_details_bar_menu,menu);
+        }
+        else {
+            getMenuInflater().inflate(R.menu.api_recipe_details_bar_menu,menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 }

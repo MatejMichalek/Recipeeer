@@ -13,6 +13,7 @@
             android:id="@+id/action_welcomeFragment_to_searchedRecipesFragment"
             app:destination="@id/searchedRecipesFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/myRecipesFragment"
         android:name="com.example.recipeeer.main.MyRecipesFragment"
@@ -31,4 +32,9 @@
         tools:layout="@layout/fragment_searched_recipes" />
     <action android:id="@+id/action_global_favoriteRecipesFragment" app:destination="@id/favoriteRecipesFragment"/>
     <action android:id="@+id/action_global_myRecipesFragment" app:destination="@id/myRecipesFragment"/>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.recipeeer.main.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" /><action android:id="@+id/action_global_profileFragment" app:destination="@id/profileFragment"/>
 </navigation>

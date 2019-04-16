@@ -2,41 +2,31 @@ package com.example.recipeeer.main;
 
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-
-import com.example.recipeeer.domain.User;
-import com.example.recipeeer.domain.UserViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.createRecipe.CreateRecipeActivity;
-import com.example.recipeeer.domain.UserListAdapter;
+import com.example.recipeeer.domain.User;
+import com.example.recipeeer.domain.UserViewModel;
 import com.example.recipeeer.login.LogInActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
-public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, MyRecipesFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, MyRecipesFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
 
     private FirebaseUser mFirebaseUser;
     private User currentUser;
@@ -65,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             mNavigationView = findViewById(R.id.nav_view);
 //            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
             if (currentUser == null) {
-                mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),-1,2));
+                mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),2));
                 currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
             }
             ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(currentUser.getName());
@@ -97,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                     switch (menuItem.getItemId()) {
                         case R.id.mHome:
                             Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
+                            break;
+
+                        case R.id.profile:
+                            Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_profileFragment);
                             break;
 
                         case R.id.myRecipes:

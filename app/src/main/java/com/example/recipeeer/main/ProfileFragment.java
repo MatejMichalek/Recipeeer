@@ -3,7 +3,6 @@ package com.example.recipeeer.main;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,17 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.recipeeer.R;
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FavoriteRecipesFragment.OnFragmentInteractionListener} interface
+ * {@link ProfileFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FavoriteRecipesFragment#newInstance} factory method to
+ * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FavoriteRecipesFragment extends Fragment {
+public class ProfileFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,12 +32,9 @@ public class FavoriteRecipesFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-
     private FloatingActionButton fab;
 
-
-    public FavoriteRecipesFragment() {
+    public ProfileFragment() {
         // Required empty public constructor
     }
 
@@ -48,11 +44,11 @@ public class FavoriteRecipesFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FavoriteRecipesFragment.
+     * @return A new instance of fragment ProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FavoriteRecipesFragment newInstance(String param1, String param2) {
-        FavoriteRecipesFragment fragment = new FavoriteRecipesFragment();
+    public static ProfileFragment newInstance(String param1, String param2) {
+        ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -74,7 +70,9 @@ public class FavoriteRecipesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
-        return inflater.inflate(R.layout.fragment_favorite_recipes, container, false);
+
+
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -88,8 +86,8 @@ public class FavoriteRecipesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fab.hide();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favourite recipes");
-        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My profile");
+        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.profile);
     }
 
     @Override
@@ -123,10 +121,4 @@ public class FavoriteRecipesFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-//
-//    @Override
-//    public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
-//        super.onInflate(context, attrs, savedInstanceState);
-//        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites); //just add this line
-//    }
 }

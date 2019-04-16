@@ -21,7 +21,7 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             RecipeeerDatabase.class,
-                            "recipeeer_db")
+                            "RecipeeerDB")
 //                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -55,14 +55,14 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Recipe recipe = new Recipe("My first recipe",85,"cdcsdcasda",97);
-            recipeDao.insert(recipe);
-            recipe = new Recipe("My second recipe",40,"cdcsddfsq dsa ",97);
-            recipeDao.insert(recipe);
-            recipe = new Recipe("Recipe from somebody else",550,"asfa sldasn doals kdaos dka d",95);
-            recipeDao.insert(recipe);
-            recipe = new Recipe("My third recipe",400,"af asf ajuohjnfgf dsa ",97);
-            recipeDao.insert(recipe);
+//            Recipe recipe = new Recipe("My first recipe",85,"cdcsdcasda",97);
+//            recipeDao.insert(recipe);
+//            recipe = new Recipe("My second recipe",40,"cdcsddfsq dsa ",97);
+//            recipeDao.insert(recipe);
+//            recipe = new Recipe("Recipe from somebody else",550,"asfa sldasn doals kdaos dka d",95);
+//            recipeDao.insert(recipe);
+//            recipe = new Recipe("My third recipe",400,"af asf ajuohjnfgf dsa ",97);
+//            recipeDao.insert(recipe);
 //            userDao.deleteAll();
 //            User user = new User("MyEmail","Matej",21,1);
 //            userDao.insert(user);
