@@ -32,6 +32,10 @@ public class IngredientViewModel extends AndroidViewModel {
         return ingredientsToAdd.size();
     }
 
+    public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeID) {
+        return ingredientRepository.getIngredientsForRecipe(recipeID);
+    }
+
     public List<Ingredient> getIngredientsToAdd() {
         return ingredientsToAdd;
     }

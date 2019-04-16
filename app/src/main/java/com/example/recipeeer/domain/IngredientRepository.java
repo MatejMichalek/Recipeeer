@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+
 public class IngredientRepository {
 
     private IngredientDao ingredientDao;
@@ -16,6 +18,10 @@ public class IngredientRepository {
 
     public void insertIngredients(List<Ingredient> ingredients) {
         new insertAsyncTask(ingredientDao).execute(ingredients);
+    }
+
+    public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeID) {
+        return ingredientDao.getIngredientsForRecipe(recipeID);
     }
 
     private static class insertAsyncTask extends AsyncTask<List<Ingredient>,Void,Void> {

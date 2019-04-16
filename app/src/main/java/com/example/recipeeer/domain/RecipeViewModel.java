@@ -22,7 +22,15 @@ public class RecipeViewModel extends AndroidViewModel {
         return recipeRepository.getAllMyRecipes(email);
     }
 
+    public LiveData<Recipe> getRecipeById(int recipeID) {
+        return recipeRepository.getRecipeById(recipeID);
+    }
+
     public int insert(Recipe recipe) {
         return recipeRepository.insert(recipe);
+    }
+
+    public int delete(int recipeID) {
+        return recipeRepository.delete(recipeID);
     }
 }

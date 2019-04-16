@@ -281,5 +281,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
         addedIngredientsFrame.removeView((View) view.getParent());
         ((LinearLayout) view.getParent()).setVisibility(View.GONE);
         checkInputField();
+        LinearLayout lin;
     }
 }

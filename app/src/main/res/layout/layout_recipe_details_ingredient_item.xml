@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp">
+
+    <ImageView
+        android:layout_width="8dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_point_black"
+        android:layout_gravity="center"
+        android:layout_marginEnd="5dp"/>
+
+    <TextView
+        android:tag="IngredientText"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="17sp"
+        />
+
+</LinearLayout>

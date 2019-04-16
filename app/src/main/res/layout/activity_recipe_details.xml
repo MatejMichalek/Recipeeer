@@ -1,10 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".recipeDetails.RecipeDetailsActivity"
-    android:orientation="vertical">
+    android:background="@color/colorAppBackground">
 
-    <include layout="@layout/layout_action_bar"/>
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/layout_action_bar"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/recipeTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recipe name"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="30sp"
+                android:layout_marginBottom="10dp"
+                android:paddingVertical="5dp"
+                android:background="@drawable/my_recipe_item"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:background="@drawable/my_recipe_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:text="Author:"
+                    android:layout_marginEnd="10dp"/>
+
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="20sp"
+                    android:text="AuthorName"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/recipeDetailsImage"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/img_not_found"
+                android:scaleType="fitCenter"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:background="@drawable/my_recipe_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:text="Preparation time:"
+                    android:layout_marginEnd="10dp"/>
+
+                <TextView
+                    android:id="@+id/preparationTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="20sp"
+                    android:text="Time in minutes"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:background="@drawable/my_recipe_item"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:text="Ingredients:"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/ingredientsFrame">
+
+                    <!--<include layout="@layout/layout_recipe_details_ingredient_item"-->
+                    <!--android:id="@+id/ingredientsFrame"></include>-->
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:background="@drawable/my_recipe_item">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:text="Instructions:"/>
+
+                <TextView
+                    android:id="@+id/instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="20sp"
+                    android:justificationMode="inter_word"
+                    android:paddingHorizontal="10dp"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</ScrollView>
