@@ -45,4 +45,12 @@ public class UserViewModel extends AndroidViewModel {
         }
         return false;
     }
+
+    public void updateUsername(String email, String username) {
+        userRepository.updateUsername(email,username);
+    }
+
+    public void updateUserGender(String email, int gender) {
+        userRepository.updateUserGender(email,gender);
+    }
 }

@@ -36,6 +36,7 @@ import com.example.recipeeer.domain.Ingredient;
 import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.ByteArrayOutputStream;
@@ -154,8 +155,12 @@ public class CreateRecipeActivity extends AppCompatActivity {
     }
 
     private void showPictureDialog(View v) {
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder pictureDialog = new MaterialAlertDialogBuilder(this);
         pictureDialog.setTitle("Select action");
+
+
+
+
         String[] pictureDialogItems = {
                 "Select photo from gallery",
                 "Capture photo from camera" };
@@ -185,7 +190,10 @@ public class CreateRecipeActivity extends AppCompatActivity {
                         startActivityForResult(intent, CAMERA);
                     }
                 });
-        pictureDialog.show(); 
+        AlertDialog dialog = pictureDialog.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
     }
 
     @Override

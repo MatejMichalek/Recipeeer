@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                 @Override
                 public void onChanged(User user) {
                     if (user != null) {
+                        currentUser = user;
                         ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(user.getName());
                     }
                 }
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
 //                    setResult(RESULT_OK, replyIntent);
 
                     Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
-                    intent.putExtra("currentUserID",currentUser.getId());
+                    intent.putExtra("currentUserID",mUserViewModel.getUser().getValue().getId());
                     startActivity(intent);
 ////                    Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.createRecipeActivity);
                 }

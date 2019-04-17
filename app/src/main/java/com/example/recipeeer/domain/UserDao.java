@@ -29,4 +29,10 @@ public interface UserDao {
 
     @Query("SELECT * FROM User WHERE email=:email")
     public LiveData<User> getUserByEmail(String email);
+
+    @Query("UPDATE User SET username=:updatedValue WHERE email=:email")
+    public void updateUsername(String email, String updatedValue);
+
+    @Query("UPDATE User SET gender=:gender WHERE email=:email")
+    public void updateUserGender(String email, int gender);
 }

@@ -1,9 +1,11 @@
 package com.example.recipeeer.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -15,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.User;
@@ -45,6 +49,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
     private FloatingActionButton fab;
     private UserViewModel mUserViewModel;
     private Spinner mSpinner;
+    private AlertDialog mDialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -90,6 +95,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
                 if (user != null) {
                     ((TextView) getActivity().findViewById(R.id.userEmailText)).setText(user.getEmail());
                     ((EditText) getActivity().findViewById(R.id.usernameEdit)).setText(user.getName());
+
                     mSpinner.setSelection(user.getGender());
                 }
             }
@@ -97,14 +103,84 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        ImageButton editButton = view.findViewById(R.id.editUsernameButton);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.show();
+            }
+        });
+
+        createEditDialog();
 
         mSpinner = view.findViewById(R.id.userGenderSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.gender_array, R.layout.layout_spinner_item);
         adapter.setDropDownViewResource(R.layout.layout_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
-        mSpinner.setEnabled(false);
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mUserViewModel.updateUserGender(((TextView) getActivity().findViewById(R.id.userEmailText)).getText().toString(),position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return view;
+    }
+
+    private void createEditDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setIcon(android.R.drawable.ic_dialog_info);
+        builder.setTitle("Edit username");
+//        builder.setMessage("This is the example code snippet to disable button if edittext attached to mDialog is empty.");
+        DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case AlertDialog.BUTTON_POSITIVE:
+                        updateUserInDB();
+                        dialog.cancel();
+                        Toast.makeText(getActivity(),"Save clicked",Toast.LENGTH_LONG).show();
+                        break;
+                    case AlertDialog.BUTTON_NEGATIVE:
+                        dialog.cancel();
+                        Toast.makeText(getActivity(),"Cancel clicked",Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            private void updateUserInDB() {
+                String email = ((TextView) getActivity().findViewById(R.id.userEmailText)).getText().toString();
+                String username = ((EditText) mDialog.findViewById(R.id.dialogEditName)).getText().toString().trim();
+                mUserViewModel.updateUsername(email,username);
+            }
+        };
+        builder.setPositiveButton("Save", dialogOnClickListener);
+        builder.setNegativeButton("Cancel", dialogOnClickListener);
+
+        View view = getLayoutInflater().inflate(R.layout.edit_username_dialog_layout,null);
+        builder.setView(view);
+        mDialog = builder.create();
+
+        mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                ((EditText)mDialog.findViewById(R.id.dialogEditName)).setText("");
+            }
+        });
+        mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                ((EditText)mDialog.findViewById(R.id.dialogEditName)).setHint(((EditText) getActivity().findViewById(R.id.usernameEdit)).getText());
+            }
+        });
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -121,7 +197,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My profile");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.profile);
 
-        
+
     }
 
     @Override
@@ -140,6 +216,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         super.onDetach();
         mListener = null;
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

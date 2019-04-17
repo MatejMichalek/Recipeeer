@@ -21,10 +21,9 @@ public class User {
     @ColumnInfo(name = "username")
     private String name;
 
-    @NonNull
     private int gender;
 
-    public User(int id, @NonNull String email, @NonNull String name, @NonNull int gender) {
+    public User(int id, @NonNull String email, @NonNull String name, int gender) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -52,7 +51,6 @@ public class User {
         return name;
     }
 
-    @NonNull
     public int getGender() {
         return gender;
     }
