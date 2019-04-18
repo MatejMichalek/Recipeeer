@@ -17,7 +17,7 @@ import com.example.recipeeer.R;
  * {@link SearchedRecipesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SearchedRecipesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * createService an instance of this fragment.
  */
 public class SearchedRecipesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -36,7 +36,7 @@ public class SearchedRecipesFragment extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
+     * Use this factory method to createService a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.

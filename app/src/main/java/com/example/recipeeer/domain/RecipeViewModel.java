@@ -18,6 +18,11 @@ public class RecipeViewModel extends AndroidViewModel {
         recipeRepository = new RecipeRepository(application);
     }
 
+    public RecipeListFromAPI getSearchedRecipes(String searchTerm) {
+        RecipeListFromAPI list = recipeRepository.getSearchedRecipes(searchTerm);
+        return list;
+    }
+
     public LiveData<List<Recipe>> getAllMyRecipes(String email) {
         return recipeRepository.getAllMyRecipes(email);
     }

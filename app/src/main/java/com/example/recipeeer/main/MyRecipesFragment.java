@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * {@link MyRecipesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link MyRecipesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * createService an instance of this fragment.
  */
 public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.OnListItemClickListener{
     // TODO: Rename parameter arguments, choose names that match
@@ -56,7 +56,7 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     }
 
     /**
-     * Use this factory method to create a new instance of
+     * Use this factory method to createService a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.

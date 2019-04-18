@@ -33,7 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * {@link ProfileFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * createService an instance of this fragment.
  */
 public class ProfileFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
     }
 
     /**
-     * Use this factory method to create a new instance of
+     * Use this factory method to createService a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.

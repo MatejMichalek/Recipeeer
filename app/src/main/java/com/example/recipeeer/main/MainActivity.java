@@ -139,17 +139,11 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent replyIntent = new Intent();
-//                    replyIntent.putExtra("email", "NewEmail");
-//                    replyIntent.putExtra("name", "NewName");
-//                    replyIntent.putExtra("age", 15);
-//                    replyIntent.putExtra("gender", 2);
-//                    setResult(RESULT_OK, replyIntent);
 
                     Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
                     intent.putExtra("currentUserID",mUserViewModel.getUser().getValue().getId());
                     startActivity(intent);
-////                    Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.createRecipeActivity);
+
                 }
             });
         }
