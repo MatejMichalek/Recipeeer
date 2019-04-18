@@ -9,6 +9,7 @@ import com.example.recipeeer.domain.RecipeeerDatabase;
 import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserListAdapter;
 import com.example.recipeeer.domain.UserViewModel;
+import com.example.recipeeer.search.SearchActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.recipeeer.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,6 +110,8 @@ public class WelcomeFragment extends Fragment {
 //            }
 //        });
 
+
+
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_users);
@@ -115,6 +119,17 @@ public class WelcomeFragment extends Fragment {
 
         adapter = new UserListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
+
+        Button searchButton = view.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 

@@ -80,8 +80,8 @@ public class CreateRecipeActivity extends AppCompatActivity {
         uploadImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showPictureDialog(v);
-                mRecipeViewModel.getSearchedRecipes("burger");
+                showPictureDialog(v);
+//                mRecipeViewModel.getSearchedRecipes("burger");
             }
         });
 

@@ -1,5 +1,6 @@
 package com.example.recipeeer.recipeDetails;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -20,6 +21,8 @@ import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Ingredient;
 import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
+import com.example.recipeeer.domain.RecipeFromAPI;
+import com.example.recipeeer.domain.RecipeListFromAPI;
 import com.example.recipeeer.domain.RecipeViewModel;
 
 import java.util.List;
@@ -34,71 +37,103 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private LinearLayout mIngredientsFrame;
     private TextView mInstructions;
     private ImageView mImage;
+    private Integer currentUserID;
+    private Object recipeID;
+    private boolean isMyRecipe;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
-
-        if (isMyRecipe()) {
-            findViewById(R.id.authorFrame).setVisibility(View.GONE);
-
-        }
-
+        isMyRecipe = checkIsMyRecipe();
 
         Toolbar mToolbar = findViewById(R.id.mToolbar);
         setSupportActionBar(mToolbar);
 
         mRecipeTitle = findViewById(R.id.recipeTitle);
         mAuthor = findViewById(R.id.author);
+        if (isMyRecipe) {
+            findViewById(R.id.authorFrame).setVisibility(View.GONE);
+        }
         mPreparationTime = findViewById(R.id.preparationTime);
         mInstructions = findViewById(R.id.instructions);
         mIngredientsFrame = findViewById(R.id.ingredientsFrame);
 
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        ingredientsViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
 
-        recipeViewModel.getRecipeById(getIntent().getExtras().getInt("recipeID")).observe(this, new Observer<Recipe>() {
-            @Override
-            public void onChanged(Recipe recipe) {
-                if (recipe != null) {
-                    mRecipeTitle.setText(recipe.getName());
-                    mAuthor.setText(String.valueOf(recipe.getUserId()));
-                    mPreparationTime.setText(String.valueOf(recipe.getPreparationTime())+" min");
-                    mInstructions.setText(recipe.getInstruction());
-                }
-            }
-        });
+        if (isMyRecipe) {
+            ingredientsViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
 
-        ingredientsViewModel.getIngredientsForRecipe(getIntent().getExtras().getInt("recipeID")).observe(this, new Observer<List<Ingredient>>() {
-            @Override
-            public void onChanged(List<Ingredient> ingredients) {
-                View view;
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                Toast.makeText(RecipeDetailsActivity.this,String.valueOf(ingredients.size()+" ingredients"),Toast.LENGTH_LONG).show();
-                for (Ingredient i: ingredients) {
-                    view = inflater.inflate(R.layout.layout_recipe_details_ingredient_item,mIngredientsFrame,false);
-                    ((TextView) view.findViewWithTag("IngredientText")).setText(i.getValue());
-                    mIngredientsFrame.addView(view);
+            recipeViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
+                @Override
+                public void onChanged(Recipe recipe) {
+                    if (recipe != null) {
+                        mRecipeTitle.setText(recipe.getName());
+                        mPreparationTime.setText(String.valueOf(recipe.getPreparationTime())+" min");
+                        mInstructions.setText(recipe.getInstruction());
+                    }
                 }
-            }
-        });
+            });
+
+            ingredientsViewModel.getIngredientsForRecipe((int) recipeID).observe(this, new Observer<List<Ingredient>>() {
+                @Override
+                public void onChanged(List<Ingredient> ingredients) {
+                    displayIngredients(ingredients);
+                }
+            });
+        }
+        else {
+            RecipeFromAPI recipe = recipeViewModel.getRecipeFromApi((String) recipeID);
+            mRecipeTitle.setText(recipe.title);
+            mAuthor.setText(String.valueOf(recipe.publisher));
+            mPreparationTime.setText(String.valueOf(recipe.preparationTime)+" min");
+            mInstructions.setText(recipe.instructions);
+            displayIngredients(recipe.ingredients);
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Recipe details");
     }
 
-    private boolean isMyRecipe() {
+    private void displayIngredients(List<Ingredient> ingredients) {
+        View view;
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Toast.makeText(RecipeDetailsActivity.this,String.valueOf(ingredients.size()+" ingredients"),Toast.LENGTH_LONG).show();
+        for (Ingredient i: ingredients) {
+            view = inflater.inflate(R.layout.layout_recipe_details_ingredient_item,mIngredientsFrame,false);
+            ((TextView) view.findViewWithTag("IngredientText")).setText(i.getValue());
+            mIngredientsFrame.addView(view);
+        }
+    }
+
+    private boolean checkIsMyRecipe() {
+//        try {
         try {
-            int currentUserID = getIntent().getExtras().getInt("currentUserID");
-            int authorID = getIntent().getExtras().getInt("authorID");
-            return currentUserID==authorID;
+            currentUserID = getIntent().getExtras().getInt("currentUserID");
         }
         catch (NullPointerException e) {
             finish();
             return false;
         }
+        recipeID = getIntent().getExtras().get("recipeFromApiID");
+        if (recipeID != null) {
+            return false;
+        }
+        recipeID = getIntent().getExtras().get("recipeID");
+        if (recipeID != null) {
+            return true;
+        }
+        finish();
+        return true;
+
+//            int authorID = getIntent().getExtras().getInt("authorID");
+//            return currentUserID==authorID;
+//        }
+//        catch (NullPointerException e) {
+//            finish();
+//            return false;
+//        }
     }
 
     @Override
@@ -122,7 +157,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (isMyRecipe()) {
+        if (isMyRecipe) {
             getMenuInflater().inflate(R.menu.my_recipe_details_bar_menu,menu);
         }
         else {

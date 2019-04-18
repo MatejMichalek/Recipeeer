@@ -1,5 +1,11 @@
 package com.example.recipeeer.domain;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 
 import androidx.room.Entity;
@@ -13,11 +19,14 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity (foreignKeys = @ForeignKey(entity = Recipe.class,parentColumns = "recipeid",childColumns = "recipeId",onDelete = CASCADE),indices = {@Index("id"),@Index("recipeId")})
 public class Ingredient {
     @PrimaryKey(autoGenerate = true)
+    @Expose
     private int id;
 
     @NonNull
+    @SerializedName("originalString")
     private String value;
 
+    @Expose
     private int recipeId;
 
     public Ingredient(int id, @NonNull String value, int recipeId) {

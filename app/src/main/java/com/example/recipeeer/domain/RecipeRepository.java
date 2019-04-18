@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RecipeRepository {
@@ -25,8 +24,6 @@ public class RecipeRepository {
     public RecipeRepository(Application application) {
         RecipeeerDatabase db = RecipeeerDatabase.getDatabase(application);
         recipeDao = db.recipeDao();
-        ApiHandler apiHandler = new ApiHandler();
-        apiEndpointService = apiHandler.createService();
     }
 
     public LiveData<List<Recipe>> getAllMyRecipes(String email) {
@@ -63,6 +60,7 @@ public class RecipeRepository {
 
     public RecipeListFromAPI getSearchedRecipes(String searchTerm) {
         try {
+            apiEndpointService = ApiHandler.createEndpoint(true);
             return new getSearchAsyncTask(apiEndpointService).execute(searchTerm).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -87,6 +85,19 @@ public class RecipeRepository {
 //            }
 //        });
 
+    }
+
+    public RecipeFromAPI getRecipeFromApi(String recipeID) {
+        try {
+            apiEndpointService = ApiHandler.createEndpoint(false);
+            return new getRecipeFromApiAsyncTask(apiEndpointService).execute(recipeID).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -131,7 +142,33 @@ public class RecipeRepository {
             Call<RecipeListFromAPI> call = apiEndpointService.getSearchedRecipes(strings[0]);
             Log.i("REQUEST URL",call.request().url().toString());
 
-            Response<RecipeListFromAPI> response = null;
+            Response<RecipeListFromAPI> response;
+            try {
+                response = call.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            Log.i("RESPONSE STATUS CODE",String.valueOf(response.code()));
+            Log.i("RESPONSE BODY",String.valueOf(response.raw().body()));
+            return response.body();
+        }
+    }
+
+    private class getRecipeFromApiAsyncTask extends AsyncTask<String,Void,RecipeFromAPI>{
+
+        private ApiEndpoint asyncTaskApi;
+
+        public getRecipeFromApiAsyncTask(ApiEndpoint apiEndpointService) {
+            asyncTaskApi = apiEndpointService;
+        }
+
+        @Override
+        protected RecipeFromAPI doInBackground(String... strings) {
+            Call<RecipeFromAPI> call = apiEndpointService.getRecipeFromApi(strings[0]);
+            Log.i("REQUEST URL",call.request().url().toString());
+
+            Response<RecipeFromAPI> response;
             try {
                 response = call.execute();
             } catch (IOException e) {

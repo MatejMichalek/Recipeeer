@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".recipeDetails.RecipeDetailsActivity"></activity>
+        <activity android:name=".search.SearchActivity"></activity>
+        <activity android:name=".recipeDetails.RecipeDetailsActivity" />
         <activity
             android:name=".createRecipe.CreateRecipeActivity"
             android:parentActivityName=".main.MainActivity"

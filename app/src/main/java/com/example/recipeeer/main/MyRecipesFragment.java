@@ -144,8 +144,7 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
         Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
         intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
         intent.putExtra("recipeID",recipeID);
-        intent.putExtra("authorID",authorID);
-        Toast.makeText(getActivity(),"Recipe: "+String.valueOf(recipeID)+" Author: "+String.valueOf(authorID)+" Current: "+String.valueOf(((MainActivity) getActivity()).getCurrentUser().getId()),Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),"Recipe: "+String.valueOf(recipeID)+" CurrentUser: "+String.valueOf(((MainActivity) getActivity()).getCurrentUser().getId()),Toast.LENGTH_LONG).show();
         startActivity(intent);
     }
 

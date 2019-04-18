@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".search.SearchActivity"
+    android:orientation="vertical"
+    android:background="@color/colorAppBackground">
+
+    <include layout="@layout/layout_action_bar"/>
+
+    <include
+        layout="@layout/recipe_list_layout"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/my_recipe_item"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_keyboard_arrow_left_black"
+            android:text="Previous"
+            android:enabled="true"
+            android:background="@android:color/transparent"
+            />
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@drawable/ic_panorama_vertical_black"-->
+            <!--android:layout_gravity="center"/>-->
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_keyboard_arrow_right_black"
+            android:text="Next"
+            android:enabled="false"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

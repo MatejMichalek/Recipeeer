@@ -16,6 +16,12 @@
             android:layout_height="wrap_content"
             android:text="Welcome fragment" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:id="@+id/searchButton"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_users"
             android:layout_width="match_parent"

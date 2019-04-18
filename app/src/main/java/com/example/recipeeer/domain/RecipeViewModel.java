@@ -38,4 +38,9 @@ public class RecipeViewModel extends AndroidViewModel {
     public int delete(int recipeID) {
         return recipeRepository.delete(recipeID);
     }
+
+    public RecipeFromAPI getRecipeFromApi(String recipeID) {
+        RecipeFromAPI recipe = recipeRepository.getRecipeFromApi(recipeID);
+        return recipe;
+    }
 }
