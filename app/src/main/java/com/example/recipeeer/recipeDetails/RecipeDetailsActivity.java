@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.recipeeer.R;
 import com.example.recipeeer.api.ImageLoader;
 import com.example.recipeeer.domain.Ingredient;
@@ -66,7 +67,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         if (isMyRecipe) {
-            findViewById(R.id.authorFrame).setVisibility(View.GONE);
             ingredientsViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
 
             recipeViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
@@ -93,12 +93,22 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             mAuthor.setText(String.valueOf(recipe.publisher));
             mPreparationTime.setText(String.valueOf(recipe.preparationTime)+" min");
             mInstructions.setText(recipe.instructions);
-            mImage.setImageDrawable(ImageLoader.LoadImageFromWeb(recipe.imageURL,this));
+//            mImage.setImageDrawable(ImageLoader.LoadImageFromWeb(recipe.imageURL,this));
+            Glide.with(this).load(recipe.imageURL).placeholder(R.drawable.img_not_found).fitCenter().into(mImage);
+
             displayIngredients(recipe.ingredients);
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Recipe details");
+
+        if(mAuthor.getText().toString().trim().length()<1)
+            ((LinearLayout) mAuthor.getParent()).setVisibility(View.GONE);
+        if (mImage.getDrawable() == null)
+            mImage.setVisibility(View.GONE);
+        if (mInstructions.getText().toString().trim().length()<1)
+            ((LinearLayout) mInstructions.getParent()).setVisibility(View.GONE);
+
     }
 
     private void displayIngredients(List<Ingredient> ingredients) {

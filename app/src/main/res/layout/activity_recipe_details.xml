@@ -59,8 +59,7 @@
                     android:layout_height="match_parent"
                     android:gravity="start|center"
                     android:fontFamily="@font/roboto_medium"
-                    android:textSize="20sp"
-                    android:text="AuthorName"/>
+                    android:textSize="20sp"/>
 
             </LinearLayout>
 
@@ -68,7 +67,7 @@
                 android:id="@+id/recipeDetailsImage"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:src="@drawable/img_not_found"
+                android:layout_marginBottom="10dp"
                 android:scaleType="fitCenter"
                 />
 

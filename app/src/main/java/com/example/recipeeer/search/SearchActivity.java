@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.PagingHelper;
 import com.example.recipeeer.domain.RecipeListFromAPI;
@@ -38,6 +39,7 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
 
         userID = getIntent().getExtras().getInt("currentUserID");
         searchTerm = getIntent().getExtras().getString("searchTerm");
+
 
         Toolbar mToolbar = findViewById(R.id.mToolbar);
         setSupportActionBar(mToolbar);
