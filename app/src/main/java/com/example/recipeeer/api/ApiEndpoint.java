@@ -12,9 +12,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiEndpoint {
-    @GET("recipes/search?number=15&offset=0&instructionsRequired=true")
+    @GET("recipes/search?number=16&instructionsRequired=true")
     @Headers({"X-RapidAPI-Host: spoonacular-recipe-food-nutrition-v1.p.rapidapi.com","X-RapidAPI-Key: 78217df556mshae8b7604e3c431ap14cd62jsne18679b4e3cb"})
-    public Call<RecipeListFromAPI> getSearchedRecipes(@Query("query") String searchTerm);
+    public Call<RecipeListFromAPI> getSearchedRecipes(@Query("query") String searchTerm, @Query("offset") int offset);
 
     @GET("recipes/{recipeID}/information")
     @Headers({"X-RapidAPI-Host: spoonacular-recipe-food-nutrition-v1.p.rapidapi.com","X-RapidAPI-Key: 78217df556mshae8b7604e3c431ap14cd62jsne18679b4e3cb"})

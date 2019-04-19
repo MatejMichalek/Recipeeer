@@ -58,10 +58,11 @@ public class RecipeRepository {
         }
     }
 
-    public RecipeListFromAPI getSearchedRecipes(String searchTerm) {
+    public RecipeListFromAPI getSearchedRecipes(String searchTerm, int offset) {
         try {
+
             apiEndpointService = ApiHandler.createEndpoint(true);
-            return new getSearchAsyncTask(apiEndpointService).execute(searchTerm).get();
+            return new getSearchAsyncTask(apiEndpointService).execute(new SearchWrapper(searchTerm,offset)).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
             return null;
@@ -100,6 +101,16 @@ public class RecipeRepository {
         }
     }
 
+    private class SearchWrapper{
+        String searchTerm;
+        int offset;
+
+        SearchWrapper(String searchTerm, int offset) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+        }
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<Recipe,Void,Long>{
 
@@ -129,7 +140,7 @@ public class RecipeRepository {
         }
     }
 
-    private class getSearchAsyncTask extends AsyncTask<String,Void,RecipeListFromAPI>{
+    private class getSearchAsyncTask extends AsyncTask<SearchWrapper,Void,RecipeListFromAPI>{
         private ApiEndpoint asyncTaskApi;
 
         public getSearchAsyncTask(ApiEndpoint apiEndpointService) {
@@ -138,8 +149,8 @@ public class RecipeRepository {
 
 
         @Override
-        protected RecipeListFromAPI doInBackground(String... strings) {
-            Call<RecipeListFromAPI> call = apiEndpointService.getSearchedRecipes(strings[0]);
+        protected RecipeListFromAPI doInBackground(SearchWrapper... searchWrappers) {
+            Call<RecipeListFromAPI> call = apiEndpointService.getSearchedRecipes(searchWrappers[0].searchTerm,searchWrappers[0].offset);
             Log.i("REQUEST URL",call.request().url().toString());
 
             Response<RecipeListFromAPI> response;

@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.api.ImageLoader;
 import com.example.recipeeer.domain.Ingredient;
 import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
@@ -25,6 +27,8 @@ import com.example.recipeeer.domain.RecipeFromAPI;
 import com.example.recipeeer.domain.RecipeListFromAPI;
 import com.example.recipeeer.domain.RecipeViewModel;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
@@ -53,16 +57,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         mRecipeTitle = findViewById(R.id.recipeTitle);
         mAuthor = findViewById(R.id.author);
-        if (isMyRecipe) {
-            findViewById(R.id.authorFrame).setVisibility(View.GONE);
-        }
+
         mPreparationTime = findViewById(R.id.preparationTime);
         mInstructions = findViewById(R.id.instructions);
         mIngredientsFrame = findViewById(R.id.ingredientsFrame);
+        mImage = findViewById(R.id.recipeDetailsImage);
 
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         if (isMyRecipe) {
+            findViewById(R.id.authorFrame).setVisibility(View.GONE);
             ingredientsViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
 
             recipeViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
@@ -89,6 +93,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             mAuthor.setText(String.valueOf(recipe.publisher));
             mPreparationTime.setText(String.valueOf(recipe.preparationTime)+" min");
             mInstructions.setText(recipe.instructions);
+            mImage.setImageDrawable(ImageLoader.LoadImageFromWeb(recipe.imageURL,this));
             displayIngredients(recipe.ingredients);
         }
 
@@ -165,4 +170,5 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
         return super.onCreateOptionsMenu(menu);
     }
+
 }

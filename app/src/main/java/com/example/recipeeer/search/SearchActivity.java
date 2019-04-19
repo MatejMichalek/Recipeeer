@@ -2,6 +2,7 @@ package com.example.recipeeer.search;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,9 +13,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.domain.PagingHelper;
+import com.example.recipeeer.domain.RecipeListFromAPI;
 import com.example.recipeeer.domain.RecipeViewModel;
 import com.example.recipeeer.domain.SearchedRecipesListAdapter;
 import com.example.recipeeer.domain.UserListAdapter;
@@ -25,17 +29,21 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
     private RecipeViewModel mRecipeViewModel;
     private SearchedRecipesListAdapter adapter;
     private int userID;
+    private String searchTerm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        userID = getIntent().getExtras().getInt("currentUserID");
+        searchTerm = getIntent().getExtras().getString("searchTerm");
+
         Toolbar mToolbar = findViewById(R.id.mToolbar);
         setSupportActionBar(mToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Search");
+        getSupportActionBar().setTitle("Search \""+searchTerm+"\"");
 
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
@@ -45,7 +53,46 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
         adapter = new SearchedRecipesListAdapter(this,this);
         recyclerView.setAdapter(adapter);
 
-        adapter.setSearchedRecipes(mRecipeViewModel.getSearchedRecipes("burger"));
+        mRecipeViewModel.search(searchTerm,0);
+
+//        adapter.setSearchedRecipes(mRecipeViewModel.getSearchedRecipes(searchTerm));
+        mRecipeViewModel.getSearchedRecipes(searchTerm).observe(this, new Observer<RecipeListFromAPI>() {
+            @Override
+            public void onChanged(RecipeListFromAPI recipeListFromAPI) {
+                adapter.setSearchedRecipes(recipeListFromAPI);
+            }
+        });
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.previousPage:
+                        mRecipeViewModel.search(searchTerm,-1);
+                        break;
+                    case R.id.nextPage:
+                        mRecipeViewModel.search(searchTerm,1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        final Button previousPage = findViewById(R.id.previousPage);
+        final Button nextPage = findViewById(R.id.nextPage);
+
+        previousPage.setOnClickListener(listener);
+        nextPage.setOnClickListener(listener);
+
+        mRecipeViewModel.getPagingHelper().observe(this, new Observer<PagingHelper>() {
+            @Override
+            public void onChanged(PagingHelper pagingHelper) {
+                if (pagingHelper != null) {
+                    previousPage.setEnabled(pagingHelper.canGoToPreviousPage());
+                    nextPage.setEnabled(pagingHelper.canGoToNextPage());
+                }
+            }
+        });
 
     }
 

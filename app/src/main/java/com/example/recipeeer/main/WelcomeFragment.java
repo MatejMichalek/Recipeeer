@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.recipeeer.domain.QuickSearchItem;
 import com.example.recipeeer.domain.RecipeeerDatabase;
 import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserListAdapter;
 import com.example.recipeeer.domain.UserViewModel;
+import com.example.recipeeer.search.OnSearchIconClickListener;
+import com.example.recipeeer.search.QuickSearchAdapter;
 import com.example.recipeeer.search.SearchActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -16,18 +19,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.recipeeer.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,7 +47,7 @@ import java.util.List;
  * Use the {@link WelcomeFragment#newInstance} factory method to
  * createService an instance of this fragment.
  */
-public class WelcomeFragment extends Fragment {
+public class WelcomeFragment extends Fragment implements OnSearchIconClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -55,6 +63,8 @@ public class WelcomeFragment extends Fragment {
     private FloatingActionButton fab;
     private UserViewModel mUserViewModel;
     private UserListAdapter adapter;
+    private QuickSearchAdapter mAdapter;
+    private EditText searchEdit;
 
 
     public WelcomeFragment() {
@@ -95,7 +105,7 @@ public class WelcomeFragment extends Fragment {
         mUserViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
-                adapter.setUsers(users);
+//                adapter.setUsers(users);
             }
         });
 
@@ -114,23 +124,60 @@ public class WelcomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_users);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_users);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//        adapter = new UserListAdapter(getActivity());
+//        recyclerView.setAdapter(adapter);
 
-        adapter = new UserListAdapter(getActivity());
-        recyclerView.setAdapter(adapter);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_quickSearch);
+        GridLayoutManager manager = new GridLayoutManager(getActivity(),4);
+        recyclerView.setLayoutManager(manager);
 
-        Button searchButton = view.findViewById(R.id.searchButton);
+        mAdapter = new QuickSearchAdapter(loadQuickSearchItems(),this);
+        recyclerView.setAdapter(mAdapter);
+
+        final Button searchButton = view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
-                intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
-                startActivity(intent);
+                String searchTerm = searchEdit.getText().toString().trim();
+                startSearch(searchTerm);
+
+            }
+        });
+
+        searchEdit = view.findViewById(R.id.searchEdit);
+        searchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (searchEdit.getText().toString().trim().length()>0) {
+                    searchButton.setEnabled(true);
+                }
+                else {
+                    searchButton.setEnabled(false);
+                }
             }
         });
 
         return view;
+    }
+
+    private void startSearch(String searchTerm) {
+        Intent intent = new Intent(getActivity(), SearchActivity.class);
+        intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
+        intent.putExtra("searchTerm",searchTerm.toLowerCase());
+        startActivity(intent);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -171,6 +218,11 @@ public class WelcomeFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onSearchIconClick(String name) {
+        startSearch(name);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -191,4 +243,28 @@ public class WelcomeFragment extends Fragment {
 //        super.onInflate(context, attrs, savedInstanceState);
 //        ((ActivityWithDrawer) getActivity()).updateNavState(R.id.home); //just add this line
 //    }
+
+
+    private List<QuickSearchItem> loadQuickSearchItems() {
+        List<QuickSearchItem> items = new ArrayList<>();
+        items.add(new QuickSearchItem("Chicken",R.drawable.icons8_chicken_50));
+        items.add(new QuickSearchItem("Cookies",R.drawable.icons8_cookies_50));
+        items.add(new QuickSearchItem("Beef",R.drawable.icons8_cow_50));
+        items.add(new QuickSearchItem("Doughnut",R.drawable.icons8_doughnut_filled_50));
+        items.add(new QuickSearchItem("Fish",R.drawable.icons8_fish_food_50));
+        items.add(new QuickSearchItem("Grill",R.drawable.icons8_grill_filled_50));
+        items.add(new QuickSearchItem("Burger",R.drawable.icons8_hamburger_filled_50));
+        items.add(new QuickSearchItem("Soup",R.drawable.icons8_hot_springs_filled_50));
+        items.add(new QuickSearchItem("Chili",R.drawable.icons8_chili_pepper_50));
+        items.add(new QuickSearchItem("Mushroom",R.drawable.icons8_mushroom_50));
+        items.add(new QuickSearchItem("Pancake",R.drawable.icons8_pancake_50));
+        items.add(new QuickSearchItem("Pork",R.drawable.icons8_pig_50));
+        items.add(new QuickSearchItem("Pizza",R.drawable.icons8_pizza_filled_50));
+        items.add(new QuickSearchItem("Potato",R.drawable.icons8_potato_50));
+        items.add(new QuickSearchItem("Pasta",R.drawable.icons8_spaghetti_50));
+        items.add(new QuickSearchItem("Vegan",R.drawable.icons8_vegan_food_50));
+
+
+        return items;
+    }
 }
