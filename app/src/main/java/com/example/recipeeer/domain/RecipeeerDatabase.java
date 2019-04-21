@@ -9,7 +9,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {User.class,Recipe.class,Ingredient.class},version = 1,exportSchema = false)
+@Database(entities = {User.class,Recipe.class,Ingredient.class,Favorites.class},version = 1,exportSchema = false)
 public abstract class RecipeeerDatabase extends RoomDatabase {
 
     private static volatile RecipeeerDatabase INSTANCE;
@@ -21,7 +21,7 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             RecipeeerDatabase.class,
-                            "RecipeeerDB")
+                            "Recipeeer")
 //                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -33,6 +33,7 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract RecipeDao recipeDao();
     public abstract IngredientDao ingredientDao();
+    public abstract FavoritesDao favoritesDao();
 
     private static RoomDatabase.Callback
             sRoomDatabaseCallback = new RoomDatabase.Callback(){
@@ -42,6 +43,7 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
             new PopulateDbAsync(INSTANCE).execute();
         }
     };
+
 
     private static class PopulateDbAsync extends AsyncTask<Void,Void,Void> {
 

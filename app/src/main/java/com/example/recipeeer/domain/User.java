@@ -1,5 +1,7 @@
 package com.example.recipeeer.domain;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 
 import androidx.room.ColumnInfo;
@@ -54,4 +56,5 @@ public class User {
     public int getGender() {
         return gender;
     }
+
 }

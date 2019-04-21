@@ -17,6 +17,7 @@ import retrofit2.Response;
 
 public class RecipeRepository {
     private RecipeDao recipeDao;
+    private FavoritesDao favoritesDao;
     private ApiEndpoint apiEndpointService;
 
 //    private LiveData<List<Recipe>> allMyRecipes;
@@ -24,6 +25,7 @@ public class RecipeRepository {
     public RecipeRepository(Application application) {
         RecipeeerDatabase db = RecipeeerDatabase.getDatabase(application);
         recipeDao = db.recipeDao();
+        favoritesDao = db.favoritesDao();
     }
 
     public LiveData<List<Recipe>> getAllMyRecipes(String email) {
@@ -44,6 +46,14 @@ public class RecipeRepository {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public void insert(Favorites favorites) {
+        AsyncTask.Status status = new insertFavoritesAsyncTask(favoritesDao).execute(favorites).getStatus();
+    }
+
+    public void delete(Favorites favorites) {
+        new deleteFavoritesAsyncTask(favoritesDao).execute(favorites);
     }
 
     public int delete(int recipeID) {
@@ -99,6 +109,10 @@ public class RecipeRepository {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public LiveData<List<Favorites>> getFavoritesForUser(int userId) {
+        return favoritesDao.getFavoriteRecipesForUser(userId);
     }
 
     private class SearchWrapper{
@@ -189,6 +203,34 @@ public class RecipeRepository {
             Log.i("RESPONSE STATUS CODE",String.valueOf(response.code()));
             Log.i("RESPONSE BODY",String.valueOf(response.raw().body()));
             return response.body();
+        }
+    }
+
+    private static class insertFavoritesAsyncTask extends AsyncTask<Favorites,Void,Void> {
+        private FavoritesDao asyncTask;
+
+        public insertFavoritesAsyncTask(FavoritesDao favoritesDao) {
+            asyncTask = favoritesDao;
+        }
+
+        @Override
+        protected Void doInBackground(Favorites... favorites) {
+            asyncTask.insert(favorites[0]);
+            return null;
+        }
+    }
+
+    private static class deleteFavoritesAsyncTask extends AsyncTask<Favorites,Void,Void> {
+        private FavoritesDao asyncTask;
+
+        public deleteFavoritesAsyncTask(FavoritesDao favoritesDao) {
+            asyncTask = favoritesDao;
+        }
+
+        @Override
+        protected Void doInBackground(Favorites... favorites) {
+            asyncTask.delete(favorites[0].getUserId(),favorites[0].getRecipeId());
+            return null;
         }
     }
 }

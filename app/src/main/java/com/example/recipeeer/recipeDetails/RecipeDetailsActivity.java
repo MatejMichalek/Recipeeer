@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.recipeeer.R;
 import com.example.recipeeer.api.ImageLoader;
+import com.example.recipeeer.domain.Favorites;
 import com.example.recipeeer.domain.Ingredient;
 import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
@@ -45,6 +46,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private Integer currentUserID;
     private Object recipeID;
     private boolean isMyRecipe;
+    private Recipe mRecipe;
 
 
     @Override
@@ -67,6 +69,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         if (isMyRecipe) {
+
             ingredientsViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
 
             recipeViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
@@ -88,6 +91,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             });
         }
         else {
+
+
             RecipeFromAPI recipe = recipeViewModel.getRecipeFromApi((String) recipeID);
             mRecipeTitle.setText(recipe.title);
             mAuthor.setText(String.valueOf(recipe.publisher));
@@ -109,6 +114,17 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         if (mInstructions.getText().toString().trim().length()<1)
             ((LinearLayout) mInstructions.getParent()).setVisibility(View.GONE);
 
+    }
+
+    private void displayFavorite(boolean isPresent, Menu menu) {
+        if (isPresent) {
+            menu.findItem(R.id.action_favorite).setVisible(false);
+            menu.findItem(R.id.action_favourite_false).setVisible(true);
+        }
+        else {
+            menu.findItem(R.id.action_favorite).setVisible(true);
+            menu.findItem(R.id.action_favourite_false).setVisible(false);
+        }
     }
 
     private void displayIngredients(List<Ingredient> ingredients) {
@@ -158,25 +174,46 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_delete:
-                int result = recipeViewModel.delete(getIntent().getExtras().getInt("recipeID"));
+                int result = recipeViewModel.delete((int)recipeID);
                 if (result == 1) {
                     finish();
                     return true;
                 }
             case R.id.action_favorite:
-                //TODO
-            default:
-                return super.onOptionsItemSelected(item);
+                Toast.makeText(this,"Add favorite",Toast.LENGTH_LONG).show();
+                int time  = Integer.parseInt(mPreparationTime.getText().toString().substring(0,mPreparationTime.getText().length()-4));
+                recipeViewModel.insert(new Favorites(currentUserID,(String) recipeID,mRecipeTitle.getText().toString(),time));
+                return false;
+
+            case R.id.action_favourite_false:
+                Toast.makeText(this,"Remove favorite",Toast.LENGTH_LONG).show();
+                recipeViewModel.delete(new Favorites(currentUserID,(String) recipeID));
+                return false;
+
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         if (isMyRecipe) {
             getMenuInflater().inflate(R.menu.my_recipe_details_bar_menu,menu);
         }
         else {
             getMenuInflater().inflate(R.menu.api_recipe_details_bar_menu,menu);
+            recipeViewModel.getFavoritesForUser(currentUserID).observe(this, new Observer<List<Favorites>>() {
+                @Override
+                public void onChanged(List<Favorites> favorites) {
+                    boolean isPresent = false;
+                    for (Favorites f: favorites) {
+                        if (f.getRecipeId().equals(recipeID)) {
+                            isPresent = true;
+                            break;
+                        }
+                    }
+                    displayFavorite(isPresent, menu);
+                }
+            });
         }
         return super.onCreateOptionsMenu(menu);
     }

@@ -7,10 +7,10 @@
         android:title="Favorite"
         app:showAsAction="always"
         />
-    <!--<item-->
-        <!--android:id="@+id/action_favourite_false"-->
-        <!--android:icon="@drawable/ic_favorite_border"-->
-        <!--android:title="Remove recipe"-->
-        <!--app:showAsAction="ifRoom"-->
-        <!--/>-->
+    <item
+        android:id="@+id/action_favourite_false"
+        android:icon="@drawable/ic_favorite"
+        android:title="Remove recipe"
+        app:showAsAction="always"
+        />
 </menu>

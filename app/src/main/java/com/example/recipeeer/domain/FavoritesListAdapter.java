@@ -13,30 +13,29 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyRecipesListAdapter extends RecyclerView.Adapter<MyRecipesListAdapter.RecipeViewHolder> {
+public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdapter.ViewHolder> {
 
     private final LayoutInflater inflater;
-    private List<Recipe> myRecipes;
+    private List<Favorites> favorites;
     private final OnListItemClickListener mOnListItemClickListener;
 
-    public MyRecipesListAdapter(Context context, OnListItemClickListener mOnListItemClickListener) {
+    public FavoritesListAdapter(Context context, OnListItemClickListener mOnListItemClickListener) {
         inflater = LayoutInflater.from(context);
         this.mOnListItemClickListener = mOnListItemClickListener;
     }
 
     @NonNull
     @Override
-    public MyRecipesListAdapter.RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavoritesListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.recyclerview_myrecipes_item,parent,false);
-        return new RecipeViewHolder(view);
-    }
+        return new ViewHolder(view);    }
 
     @Override
-    public void onBindViewHolder(@NonNull MyRecipesListAdapter.RecipeViewHolder holder, int position) {
-        if (myRecipes != null) {
-            Recipe recipe = myRecipes.get(position);
-            holder.recipeNameView.setText(recipe.getName());
-            holder.preparationTimeView.setText(String.valueOf(recipe.getPreparationTime()+" min"));
+    public void onBindViewHolder(@NonNull FavoritesListAdapter.ViewHolder holder, int position) {
+        if (favorites != null) {
+            Favorites favoriteRecipe = favorites.get(position);
+            holder.recipeNameView.setText(favoriteRecipe.getTitle());
+            holder.preparationTimeView.setText(String.valueOf(favoriteRecipe.getPreparationTime()+" min"));
         }
         else {
             holder.recipeNameView.setText("No recipe");
@@ -45,24 +44,23 @@ public class MyRecipesListAdapter extends RecyclerView.Adapter<MyRecipesListAdap
 
     @Override
     public int getItemCount() {
-        if (myRecipes != null) {
-            return myRecipes.size();
+        if (favorites != null) {
+            return favorites.size();
         }
         else return 0;
     }
 
-    public void setMyRecipes(List<Recipe> recipes) {
-        myRecipes = recipes;
+    public void setFavorites(List<Favorites> favorites) {
+        this.favorites = favorites;
         notifyDataSetChanged();
     }
 
-
-    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView recipeNameView;
         private final TextView preparationTimeView;
 
-        public RecipeViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             recipeNameView = itemView.findViewById(R.id.recyclerViewItemRecipeNameText);
             preparationTimeView = itemView.findViewById(R.id.recyclerViewItemRecipeTimeText);
@@ -71,12 +69,12 @@ public class MyRecipesListAdapter extends RecyclerView.Adapter<MyRecipesListAdap
 
         @Override
         public void onClick(View v) {
-            Recipe recipe = myRecipes.get(getAdapterPosition());
-            mOnListItemClickListener.onListItemClick(recipe.getId());
+            Favorites recipe = favorites.get(getAdapterPosition());
+            mOnListItemClickListener.onListItemClick(recipe.getRecipeId());
         }
     }
 
     public interface OnListItemClickListener {
-        void onListItemClick(int recipeID);
+        void onListItemClick(String recipeID);
     }
 }

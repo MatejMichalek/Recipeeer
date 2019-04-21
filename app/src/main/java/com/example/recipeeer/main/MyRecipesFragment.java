@@ -140,7 +140,7 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     }
 
     @Override
-    public void onListItemClick(int recipeID, int authorID) {
+    public void onListItemClick(int recipeID) {
         Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
         intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
         intent.putExtra("recipeID",recipeID);

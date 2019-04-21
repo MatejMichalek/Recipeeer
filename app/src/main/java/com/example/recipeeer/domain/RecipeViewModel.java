@@ -36,6 +36,10 @@ public class RecipeViewModel extends AndroidViewModel {
         ((MutableLiveData<RecipeListFromAPI>) searchedRecipes).setValue(list);
     }
 
+    public LiveData<List<Favorites>> getFavoritesForUser(int userId) {
+        return recipeRepository.getFavoritesForUser(userId);
+    }
+
     public LiveData<List<Recipe>> getAllMyRecipes(String email) {
         return recipeRepository.getAllMyRecipes(email);
     }
@@ -46,6 +50,14 @@ public class RecipeViewModel extends AndroidViewModel {
 
     public int insert(Recipe recipe) {
         return recipeRepository.insert(recipe);
+    }
+
+    public void insert(Favorites favorites) {
+        recipeRepository.insert(favorites);
+    }
+
+    public void delete(Favorites favorites)  {
+        recipeRepository.delete(favorites);
     }
 
     public int delete(int recipeID) {
