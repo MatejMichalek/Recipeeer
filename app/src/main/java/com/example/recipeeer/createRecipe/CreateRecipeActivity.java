@@ -1,5 +1,6 @@
 package com.example.recipeeer.createRecipe;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,18 +33,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Ingredient;
 import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 public class CreateRecipeActivity extends AppCompatActivity {
@@ -81,7 +92,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showPictureDialog(v);
-//                mRecipeViewModel.getSearchedRecipes("burger");
             }
         });
 
@@ -149,11 +159,96 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 Recipe recipe = new Recipe(editName.getText().toString().trim(),Integer.parseInt(editPreparationTime.getText().toString().trim()),editInstructions.getText().toString().trim(),currentUserID);
                 int id = mRecipeViewModel.insert(recipe);
                 mIngredientViewModel.insertIngredientsForRecipe(id);
+                if (image.getTag() != null) {
+                    if (image.getTag().equals("uploaded")) {
+                        storeIntoFirebase(id);
+                    }
+                }
                 Toast.makeText(CreateRecipeActivity.this,String.valueOf(id),Toast.LENGTH_LONG).show();
                 finish();
             }
         });
+
+//        image.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Toast.makeText(CreateRecipeActivity.this,image.getTag().toString(),Toast.LENGTH_LONG).show();
+//                if (image.getTag().equals("uploaded"))
+//                    storeIntoFirebase(123456);
+//            }
+//        });
     }
+
+    private void storeIntoFirebase(int id) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference().child("users/"+String.valueOf(currentUserID)+"/recipes/"+String.valueOf(id));
+        //create a file to write bitmap data
+        final File file = new File(getBaseContext().getCacheDir(), String.valueOf(id));
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.i("FSTORAGE","Cannot crete file");
+            showFailureToast();
+        }
+
+        //Convert bitmap to byte array
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+
+        //write the bytes in file
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.i("FSTORAGE","Cannot find file for output stream");
+            showFailureToast();
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+            Log.i("FSTORAGE","Cannot write to output stream");
+            showFailureToast();
+        }
+
+
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.i("FSTORAGE","Cannot find file for input stream");
+            showFailureToast();
+        }
+
+        UploadTask uploadTask = storageReference.putStream(stream);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.i("FSTORAGE","Unsuccessfully uploaded, exception: "+exception);
+                showFailureToast();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                Log.i("FSTORAGE","Successfully uploaded, path: "+taskSnapshot.getMetadata().getPath());
+                Log.i("FSTORAGE","File is deleted = "+file.delete());
+            }
+        });
+    }
+
+    private void showFailureToast() {
+        Toast.makeText(CreateRecipeActivity.this,"Image couldn't be uploaded",Toast.LENGTH_LONG).show();
+    }
+
 
     private void showPictureDialog(View v) {
         MaterialAlertDialogBuilder pictureDialog = new MaterialAlertDialogBuilder(this);
@@ -222,22 +317,27 @@ public class CreateRecipeActivity extends AppCompatActivity {
         if (requestCode == GALLERY) {
             if (data != null) {
                 Uri contentURI = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-//                    String path = saveImage(bitmap);
-                    Toast.makeText(CreateRecipeActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//                    image.setImageURI(contentURI);
-                    image.setImageBitmap(bitmap);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(CreateRecipeActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
+                Glide.with(this).load(contentURI).placeholder(R.drawable.img_not_found).fitCenter().into(image);
+                image.setTag("uploaded");
+//                try {
+//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+////                    String path = saveImage(bitmap);
+//                    Toast.makeText(CreateRecipeActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+////                    image.setImageURI(contentURI);
+//                    image.setImageBitmap(bitmap);
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(CreateRecipeActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+//                }
             }
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            image.setImageBitmap(thumbnail);
+            Glide.with(this).load(thumbnail).placeholder(R.drawable.img_not_found).fitCenter().into(image);
+            image.setTag("uploaded");
+
+//            image.setImageBitmap(thumbnail);
 //            saveImage(thumbnail);
             Toast.makeText(CreateRecipeActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
@@ -255,6 +355,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
         try {
             File f = new File(wallpaperDirectory, FirebaseAuth.getInstance().getCurrentUser().getUid() + "_" + ".jpg");
+
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
             fo.write(bytes.toByteArray());

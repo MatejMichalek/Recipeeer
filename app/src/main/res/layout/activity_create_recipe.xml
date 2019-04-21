@@ -52,11 +52,12 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:src="@drawable/img_not_found"
                     android:scaleType="fitCenter"
                     android:id="@+id/recipeImage"
+                    android:layout_marginBottom="10dp"
                     />
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/uploadImage_btn"

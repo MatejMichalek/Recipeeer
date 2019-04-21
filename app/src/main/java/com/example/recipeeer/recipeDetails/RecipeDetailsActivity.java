@@ -1,5 +1,6 @@
 package com.example.recipeeer.recipeDetails;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
 import com.example.recipeeer.R;
 import com.example.recipeeer.api.ImageLoader;
 import com.example.recipeeer.domain.Favorites;
@@ -28,6 +33,11 @@ import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeFromAPI;
 import com.example.recipeeer.domain.RecipeListFromAPI;
 import com.example.recipeeer.domain.RecipeViewModel;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -70,6 +80,21 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         if (isMyRecipe) {
 
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("users/"+String.valueOf(currentUserID)+"/recipes/"+String.valueOf((int) recipeID));
+
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(RecipeDetailsActivity.this).load(uri).placeholder(R.drawable.img_not_found).fitCenter().into(mImage);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    mImage.setVisibility(View.GONE);
+                }
+            });
+
+
             ingredientsViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
 
             recipeViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
@@ -89,6 +114,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     displayIngredients(ingredients);
                 }
             });
+            if(mAuthor.getText().toString().trim().length()<1)
+                ((LinearLayout) mAuthor.getParent()).setVisibility(View.GONE);
         }
         else {
 
@@ -102,17 +129,13 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             Glide.with(this).load(recipe.imageURL).placeholder(R.drawable.img_not_found).fitCenter().into(mImage);
 
             displayIngredients(recipe.ingredients);
+            if (mImage.getDrawable() == null)
+                mImage.setVisibility(View.GONE);
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Recipe details");
 
-        if(mAuthor.getText().toString().trim().length()<1)
-            ((LinearLayout) mAuthor.getParent()).setVisibility(View.GONE);
-        if (mImage.getDrawable() == null)
-            mImage.setVisibility(View.GONE);
-        if (mInstructions.getText().toString().trim().length()<1)
-            ((LinearLayout) mInstructions.getParent()).setVisibility(View.GONE);
 
     }
 
@@ -218,4 +241,15 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @GlideModule
+    public class MyAppGlideModule extends AppGlideModule {
+
+        @Override
+        public void registerComponents(Context context, Glide glide, Registry registry) {
+            // Register FirebaseImageLoader to handle StorageReference
+            registry.append(StorageReference.class, InputStream.class,
+                    new FirebaseImageLoader.Factory());
+        }
+
+    }
 }
