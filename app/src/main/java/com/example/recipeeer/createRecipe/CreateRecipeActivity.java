@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +35,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Ingredient;
 import com.example.recipeeer.domain.IngredientViewModel;
@@ -317,8 +322,18 @@ public class CreateRecipeActivity extends AppCompatActivity {
         if (requestCode == GALLERY) {
             if (data != null) {
                 Uri contentURI = data.getData();
-                Glide.with(this).load(contentURI).placeholder(R.drawable.img_not_found).fitCenter().into(image);
-                image.setTag("uploaded");
+                Glide.with(this).load(contentURI).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        image.setTag("uploaded");
+                        return false;
+                    }
+                }).placeholder(R.drawable.img_not_found).fitCenter().into(image);
 //                try {
 //                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
 ////                    String path = saveImage(bitmap);
@@ -334,10 +349,20 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            Glide.with(this).load(thumbnail).placeholder(R.drawable.img_not_found).fitCenter().into(image);
-            image.setTag("uploaded");
+            Glide.with(this).load(thumbnail).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    return false;
+                }
 
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    image.setTag("uploaded");
+                    return false;
+                }
+            }).placeholder(R.drawable.img_not_found).fitCenter().into(image);
 //            image.setImageBitmap(thumbnail);
+
 //            saveImage(thumbnail);
             Toast.makeText(CreateRecipeActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }

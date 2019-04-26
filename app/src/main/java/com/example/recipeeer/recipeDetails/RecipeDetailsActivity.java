@@ -1,14 +1,6 @@
 package com.example.recipeeer.recipeDetails;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,27 +13,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
 import com.example.recipeeer.R;
-import com.example.recipeeer.api.ImageLoader;
 import com.example.recipeeer.domain.Favorites;
 import com.example.recipeeer.domain.Ingredient;
 import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeFromAPI;
-import com.example.recipeeer.domain.RecipeListFromAPI;
 import com.example.recipeeer.domain.RecipeViewModel;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
 
@@ -241,15 +231,4 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @GlideModule
-    public class MyAppGlideModule extends AppGlideModule {
-
-        @Override
-        public void registerComponents(Context context, Glide glide, Registry registry) {
-            // Register FirebaseImageLoader to handle StorageReference
-            registry.append(StorageReference.class, InputStream.class,
-                    new FirebaseImageLoader.Factory());
-        }
-
-    }
 }
