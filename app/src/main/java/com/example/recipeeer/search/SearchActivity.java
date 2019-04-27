@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.RecipeListFromAPI;
-import com.example.recipeeer.domain.RecipeViewModel;
 import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
 
 public class SearchActivity extends AppCompatActivity implements SearchedRecipesListAdapter.OnSearchListItemClickListener {

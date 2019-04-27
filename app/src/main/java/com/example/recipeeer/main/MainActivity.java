@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.example.recipeeer.R;
 import com.example.recipeeer.createRecipe.CreateRecipeActivity;
 import com.example.recipeeer.domain.User;
-import com.example.recipeeer.domain.UserViewModel;
 import com.example.recipeeer.favorites.FavoriteRecipesFragment;
 import com.example.recipeeer.login.LogInActivity;
 import com.example.recipeeer.myRecipes.MyRecipesFragment;
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
     private User currentUser;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private UserViewModel mUserViewModel;
     private MainViewModel mMainViewModel;
 
 
@@ -52,12 +50,10 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
         }
         else {
             mMainViewModel = ViewModelProviders.of(this,new MainViewModelFactory(getApplication(), mFirebaseUser.getEmail())).get(MainViewModel.class);
-//            mUserViewModel = ViewModelProviders.of(this,new UserViewModelFactory(getApplication(), mFirebaseUser.getEmail())).get(UserViewModel.class);
             mNavigationView = findViewById(R.id.nav_view);
 
             if (savedInstanceState != null)
                 currentUser = mMainViewModel.getUser().getValue();
-//                currentUser = mUserViewModel.getUser().getValue();
 
             mMainViewModel.getUser().observe(this, new Observer<User>() {
                 @Override
@@ -68,17 +64,8 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                     }
                 }
             });
-//            mUserViewModel.getUser().observe(this, new Observer<User>() {
-////                @Override
-////                public void onChanged(User user) {
-////                    if (user != null) {
-////                        currentUser = user;
-////                        ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(user.getName());
-////                    }
-////                }
-////            });
+
             mMainViewModel.insert(new User(mFirebaseUser.getEmail(), mFirebaseUser.getDisplayName(),2));
-//            mUserViewModel.insert(new User(mFirebaseUser.getEmail(), mFirebaseUser.getDisplayName(),2));
 
             Toolbar mToolbar = findViewById(R.id.mToolbar);
             setSupportActionBar(mToolbar);

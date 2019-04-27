@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.User;
-import com.example.recipeeer.domain.UserViewModel;
 import com.example.recipeeer.main.ActivityWithDrawer;
 import com.example.recipeeer.main.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

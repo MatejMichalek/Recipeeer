@@ -2,8 +2,6 @@ package com.example.recipeeer.main;
 
 import android.app.Application;
 
-import com.example.recipeeer.domain.UserViewModel;
-
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
