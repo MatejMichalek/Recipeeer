@@ -1,4 +1,6 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.db;
+
+import com.example.recipeeer.domain.Ingredient;
 
 import java.util.List;
 
@@ -10,8 +12,8 @@ import androidx.room.Query;
 @Dao
 public interface IngredientDao {
     @Insert
-    public void insertIngredients(List<Ingredient> ingredients);
+    void insertIngredients(List<Ingredient> ingredients);
 
     @Query("SELECT * FROM Ingredient WHERE recipeId=:recipeID")
-    public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeID);
+    LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeID);
 }

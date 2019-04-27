@@ -3,11 +3,7 @@ package com.example.recipeeer.domain;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
-
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;

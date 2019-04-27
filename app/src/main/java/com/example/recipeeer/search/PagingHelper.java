@@ -1,4 +1,4 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.search;
 
 public class PagingHelper {
     public static final int noOfRecipesPerPage = 16;

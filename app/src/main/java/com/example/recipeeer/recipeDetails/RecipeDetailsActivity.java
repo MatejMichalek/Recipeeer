@@ -1,6 +1,7 @@
 package com.example.recipeeer.recipeDetails;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Favorites;
 import com.example.recipeeer.domain.Ingredient;
@@ -28,6 +37,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -47,6 +57,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private Object recipeID;
     private boolean isMyRecipe;
     private Recipe mRecipe;
+    private StorageReference storageReference;
 
 
     @Override
@@ -70,12 +81,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         if (isMyRecipe) {
 
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("users/"+String.valueOf(currentUserID)+"/recipes/"+String.valueOf((int) recipeID));
+            storageReference = FirebaseStorage.getInstance().getReference().child("users/"+String.valueOf(currentUserID)+"/recipes/"+String.valueOf((int) recipeID));
 
             storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Glide.with(RecipeDetailsActivity.this).load(uri).placeholder(R.drawable.img_not_found).fitCenter().into(mImage);
+                    Glide.with(RecipeDetailsActivity.this)
+                            .load(uri)
+                            .apply(new RequestOptions().transform(new RoundedCorners(30), new FitCenter()))
+                            .placeholder(R.drawable.img_not_found)
+                            .into(mImage);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -115,18 +130,30 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             mAuthor.setText(String.valueOf(recipe.publisher));
             mPreparationTime.setText(String.valueOf(recipe.preparationTime)+" min");
             mInstructions.setText(recipe.instructions);
-//            mImage.setImageDrawable(ImageLoader.LoadImageFromWeb(recipe.imageURL,this));
-            Glide.with(this).load(recipe.imageURL).placeholder(R.drawable.img_not_found).fitCenter().into(mImage);
+
+            Glide.with(this)
+                    .load(recipe.imageURL)
+                    .apply(new RequestOptions().transform(new RoundedCorners(30), new FitCenter()))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            mImage.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .placeholder(R.drawable.img_not_found)
+                    .into(mImage);
 
             displayIngredients(recipe.ingredients);
-            if (mImage.getDrawable() == null)
-                mImage.setVisibility(View.GONE);
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Recipe details");
-
-
     }
 
     private void displayFavorite(boolean isPresent, Menu menu) {
@@ -152,7 +179,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     }
 
     private boolean checkIsMyRecipe() {
-//        try {
         try {
             currentUserID = getIntent().getExtras().getInt("currentUserID");
         }
@@ -170,14 +196,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
         finish();
         return true;
-
-//            int authorID = getIntent().getExtras().getInt("authorID");
-//            return currentUserID==authorID;
-//        }
-//        catch (NullPointerException e) {
-//            finish();
-//            return false;
-//        }
     }
 
     @Override
@@ -189,6 +207,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             case R.id.action_delete:
                 int result = recipeViewModel.delete((int)recipeID);
                 if (result == 1) {
+                    storageReference.delete();
                     finish();
                     return true;
                 }
@@ -230,5 +249,4 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
         return super.onCreateOptionsMenu(menu);
     }
-
 }

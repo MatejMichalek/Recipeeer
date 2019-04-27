@@ -34,7 +34,7 @@ public class CustomScrollView extends ScrollView {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                return false; // redirect MotionEvents to ourself
+                return false; // redirect MotionEvents to custom
 
             case MotionEvent.ACTION_CANCEL:
                 Log.i("VerticalScrollview", "onInterceptTouchEvent: CANCEL super false" );
@@ -47,6 +47,6 @@ public class CustomScrollView extends ScrollView {
 
             default: Log.i("VerticalScrollview", "onInterceptTouchEvent: " + action ); break;
         }
-
-        return false;    }
+        return false;
+    }
 }

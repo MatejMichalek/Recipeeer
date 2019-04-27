@@ -1,7 +1,9 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.db;
 
 import android.app.Application;
 import android.os.AsyncTask;
+
+import com.example.recipeeer.domain.Ingredient;
 
 import java.util.List;
 

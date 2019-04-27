@@ -1,8 +1,10 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.db;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
+
+import com.example.recipeeer.domain.User;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

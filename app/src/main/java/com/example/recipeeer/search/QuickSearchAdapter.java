@@ -1,19 +1,13 @@
 package com.example.recipeeer.search;
 
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.QuickSearchItem;
-import com.example.recipeeer.domain.SearchedRecipesListAdapter;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

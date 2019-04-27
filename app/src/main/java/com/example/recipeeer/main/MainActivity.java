@@ -30,7 +30,6 @@ import androidx.navigation.Navigation;
 
 public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, MyRecipesFragment.OnFragmentInteractionListener,FavoriteRecipesFragment.OnFragmentInteractionListener {
 
-    private FirebaseUser mFirebaseUser;
     private User currentUser;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -42,28 +41,15 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (mFirebaseUser == null) {
             Intent intent = new Intent(this, LogInActivity.class);
             startActivity(intent);
             finish();
         }
         else {
-
-
-            mUserViewModel = ViewModelProviders.of(this,new UserViewModelFactory(getApplication(),mFirebaseUser.getEmail())).get(UserViewModel.class);
-//            currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
-//
+            mUserViewModel = ViewModelProviders.of(this,new UserViewModelFactory(getApplication(), mFirebaseUser.getEmail())).get(UserViewModel.class);
             mNavigationView = findViewById(R.id.nav_view);
-////            ((TextView)mNavigationView.getHeaderView(0).findViewById(R.id.headerUserName)).setText(mFirebaseUser.getDisplayName());
-//            if (currentUser == null) {
-//                mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),2));
-//                currentUser = mUserViewModel.getCurrentUserByEmail(mFirebaseUser.getEmail());
-//            }
-
-//            if(mUserViewModel.checkIfUserExists(mFirebaseUser.getEmail())) {
-//
-//            }
 
             mUserViewModel.getUser().observe(this, new Observer<User>() {
                 @Override
@@ -74,18 +60,10 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                     }
                 }
             });
-            mUserViewModel.insert(new User(mFirebaseUser.getEmail(),mFirebaseUser.getDisplayName(),2));
-
-
-
+            mUserViewModel.insert(new User(mFirebaseUser.getEmail(), mFirebaseUser.getDisplayName(),2));
 
             Toolbar mToolbar = findViewById(R.id.mToolbar);
             setSupportActionBar(mToolbar);
-
-
-//            ActionBar actionBar = getSupportActionBar();
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
             Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
 
@@ -94,14 +72,10 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             mDrawerLayout.addDrawerListener(toggle);
             toggle.syncState();
 
-
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    // set item as selected to persist highlight
-
                     menuItem.setChecked(true);
-                    // close drawer when item is tapped
                     switch (menuItem.getItemId()) {
                         case R.id.mHome:
                             Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
@@ -127,10 +101,6 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                             break;
                     }
                     mDrawerLayout.closeDrawer(GravityCompat.START);
-
-                    // Add code here to update the UI based on the item selected
-                    // For example, swap UI fragments here
-
                     return true;
                 }
             });
@@ -149,18 +119,6 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
         }
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                mDrawerLayout.openDrawer(GravityCompat.START);
-//                TextView textView = findViewById(R.id.headerUserName);
-//                textView.setText(mFirebaseUser.getDisplayName());
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -170,17 +128,6 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
     public void updateNavState(int selectedItemID) {
         mNavigationView.setCheckedItem(selectedItemID);
     }
-
-//    @Override
-//    public void backPressed() {
-//        Navigation.findNavController(findViewById(R.id.content_frame)).navigateUp();
-//    }
-
-    //    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        Navigation.findNavController(findViewById(R.id.content_frame)).navigateUp();
-//    }
 
     public User getCurrentUser() {
         return currentUser;

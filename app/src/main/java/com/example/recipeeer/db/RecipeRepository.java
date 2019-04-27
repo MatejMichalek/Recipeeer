@@ -1,4 +1,4 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.db;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -6,6 +6,10 @@ import android.util.Log;
 
 import com.example.recipeeer.api.ApiEndpoint;
 import com.example.recipeeer.api.ApiHandler;
+import com.example.recipeeer.domain.Favorites;
+import com.example.recipeeer.domain.Recipe;
+import com.example.recipeeer.domain.RecipeFromAPI;
+import com.example.recipeeer.domain.RecipeListFromAPI;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,7 +53,7 @@ public class RecipeRepository {
     }
 
     public void insert(Favorites favorites) {
-        AsyncTask.Status status = new insertFavoritesAsyncTask(favoritesDao).execute(favorites).getStatus();
+        new insertFavoritesAsyncTask(favoritesDao).execute(favorites).getStatus();
     }
 
     public void delete(Favorites favorites) {
@@ -80,22 +84,6 @@ public class RecipeRepository {
             e.printStackTrace();
             return null;
         }
-
-
-//        call.enqueue(new Callback<RecipeListFromAPI>() {
-//            @Override
-//            public void onResponse(Call<RecipeListFromAPI> call, Response<RecipeListFromAPI> response) {
-//                Log.i("RESPONSE STATUS CODE",String.valueOf(response.code()));
-//                Log.i("RESPONSE BODY",String.valueOf(response.raw().body()));
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RecipeListFromAPI> call, Throwable t) {
-//                Log.i("RESPONSE STATUS CODE","FAILED");
-//
-//            }
-//        });
-
     }
 
     public RecipeFromAPI getRecipeFromApi(String recipeID) {

@@ -11,26 +11,26 @@ import java.util.List;
 public class RecipeListFromAPI {
     @Expose
     @SerializedName("results")
-    List<RecipeFromAPI> recipes;
+    public List<RecipeFromAPI> recipes;
 
     @Expose
-    int offset;
+    public int offset;
 
     @Expose
     @SerializedName("number")
-    int noOfRecipes;
+    public int noOfRecipes;
 
     @Expose
     @SerializedName("totalResults")
-    int totalRecipes;
+    public int totalRecipes;
 
 
     public RecipeListFromAPI() {
         recipes = new ArrayList<>();
     }
 
-    public static RecipeListFromAPI parseJSON(String response) {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.fromJson(response,RecipeListFromAPI.class);
-    }
+//    public static RecipeListFromAPI parseJSON(String response) {
+//        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+//        return gson.fromJson(response,RecipeListFromAPI.class);
+//    }
 }

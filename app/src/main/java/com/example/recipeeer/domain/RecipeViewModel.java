@@ -2,6 +2,9 @@ package com.example.recipeeer.domain;
 
 import android.app.Application;
 
+import com.example.recipeeer.db.RecipeRepository;
+import com.example.recipeeer.search.PagingHelper;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;

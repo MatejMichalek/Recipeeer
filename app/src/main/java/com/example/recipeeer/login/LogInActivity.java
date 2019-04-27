@@ -30,7 +30,6 @@ public class LogInActivity extends AppCompatActivity {
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mFirebaseAuth;
-    private Button mSignInBtn;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -40,7 +39,7 @@ public class LogInActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        mSignInBtn = findViewById(R.id.logInButton);
+        Button mSignInBtn = findViewById(R.id.logInButton);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -73,8 +72,6 @@ public class LogInActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
-
-                // ...
             }
         }
     }
@@ -97,10 +94,7 @@ public class LogInActivity extends AppCompatActivity {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LogInActivity.this,"Unsuccessfulll",Toast.LENGTH_LONG).show();
-                            //enterMainActivity(null);
                         }
-
-                        // ...
                     }
                 });
     }

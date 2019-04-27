@@ -1,4 +1,4 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.search;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.domain.RecipeFromAPI;
+import com.example.recipeeer.domain.RecipeListFromAPI;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

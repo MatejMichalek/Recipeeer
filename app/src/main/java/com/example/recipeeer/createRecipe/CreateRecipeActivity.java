@@ -1,26 +1,13 @@
 package com.example.recipeeer.createRecipe;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
-
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,7 +34,6 @@ import com.example.recipeeer.domain.RecipeViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -60,12 +46,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+
 
 public class CreateRecipeActivity extends AppCompatActivity {
 
     private static final int GALLERY = 111;
     private static final int CAMERA = 222;
-    private static final String IMAGE_DIRECTORY = "recipes_images";
 
     private ImageView image;
     private RecipeViewModel mRecipeViewModel;
@@ -78,6 +72,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
     private AppCompatButton addIngredientButton;
     private LinearLayout addedIngredientsFrame;
     private Button saveRecipeBtn;
+    private boolean isImageSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,26 +83,33 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
         Toolbar mToolbar = findViewById(R.id.mToolbar);
         setSupportActionBar(mToolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("New recipe");
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("New recipe");
+        }
 
         Button uploadImgBtn = findViewById(R.id.uploadImage_btn);
         uploadImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPictureDialog(v);
+                showPictureDialog();
             }
         });
 
         mIngredientViewModel = ViewModelProviders.of(CreateRecipeActivity.this).get(IngredientViewModel.class);
-        addedIngredientsFrame = findViewById(R.id.ingredients);
 
         editName = findViewById(R.id.editName);
+        image = findViewById(R.id.recipeImage);
         editPreparationTime = findViewById(R.id.editTime);
-        editIngredients = findViewById(R.id.editIngredient);
         editInstructions = findViewById(R.id.editInstructions);
+        editIngredients = findViewById(R.id.editIngredient);
+        addedIngredientsFrame = findViewById(R.id.ingredients);
         addIngredientButton = findViewById(R.id.addIngredient);
+        saveRecipeBtn = findViewById(R.id.saveRecipe);
+
+
+
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,33 +125,27 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 checkInputField();
             }
         });
-        image = findViewById(R.id.recipeImage);
-
-
 
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
-        saveRecipeBtn = findViewById(R.id.saveRecipe);
+
         TextWatcher mWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
-
-
             @Override
             public void afterTextChanged(Editable s) {
-                if (getCurrentFocus().getId() == editIngredients.getId()) {
-                    addIngredientButton.setEnabled(editIngredients.getText().length()>0);
-                }
-                else {
+                // to disable add ingredient button when edit field is empty
+                if (getCurrentFocus().getId() == editIngredients.getId())
+                    addIngredientButton.setEnabled(editIngredients.getText().toString().trim().length()>0);
+                // checking input field to enable/disable save button
+                else
                     checkInputField();
-                }
             }
         };
 
@@ -164,24 +160,15 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 Recipe recipe = new Recipe(editName.getText().toString().trim(),Integer.parseInt(editPreparationTime.getText().toString().trim()),editInstructions.getText().toString().trim(),currentUserID);
                 int id = mRecipeViewModel.insert(recipe);
                 mIngredientViewModel.insertIngredientsForRecipe(id);
-                if (image.getTag() != null) {
-                    if (image.getTag().equals("uploaded")) {
-                        storeIntoFirebase(id);
-                    }
+                if (isImageSelected) {
+                    storeIntoFirebase(id);
                 }
                 Toast.makeText(CreateRecipeActivity.this,String.valueOf(id),Toast.LENGTH_LONG).show();
                 finish();
             }
         });
 
-//        image.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Toast.makeText(CreateRecipeActivity.this,image.getTag().toString(),Toast.LENGTH_LONG).show();
-//                if (image.getTag().equals("uploaded"))
-//                    storeIntoFirebase(123456);
-//            }
-//        });
+        isImageSelected = false;
     }
 
     private void storeIntoFirebase(int id) {
@@ -194,7 +181,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("FSTORAGE","Cannot crete file");
-            showFailureToast();
         }
 
         //Convert bitmap to byte array
@@ -213,12 +199,10 @@ public class CreateRecipeActivity extends AppCompatActivity {
         catch (FileNotFoundException e) {
             e.printStackTrace();
             Log.i("FSTORAGE","Cannot find file for output stream");
-            showFailureToast();
         }
         catch (IOException ioe) {
             ioe.printStackTrace();
             Log.i("FSTORAGE","Cannot write to output stream");
-            showFailureToast();
         }
 
 
@@ -228,7 +212,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             Log.i("FSTORAGE","Cannot find file for input stream");
-            showFailureToast();
         }
 
         UploadTask uploadTask = storageReference.putStream(stream);
@@ -237,7 +220,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
                 Log.i("FSTORAGE","Unsuccessfully uploaded, exception: "+exception);
-                showFailureToast();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -250,17 +232,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
         });
     }
 
-    private void showFailureToast() {
-        Toast.makeText(CreateRecipeActivity.this,"Image couldn't be uploaded",Toast.LENGTH_LONG).show();
-    }
-
-
-    private void showPictureDialog(View v) {
+    private void showPictureDialog() {
         MaterialAlertDialogBuilder pictureDialog = new MaterialAlertDialogBuilder(this);
         pictureDialog.setTitle("Select action");
-
-
-
 
         String[] pictureDialogItems = {
                 "Select photo from gallery",
@@ -282,7 +256,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
                     private void choosePhotoFromGallery() {
                         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
                         startActivityForResult(galleryIntent, GALLERY);
                     }
 
@@ -306,99 +279,47 @@ public class CreateRecipeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        ((ActivityWithDrawer)getParent()).backPressed();
-//    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == this.RESULT_CANCELED) {
+        if (resultCode == RESULT_CANCELED) {
             return;
         }
+
+        RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                isImageSelected = true;
+                return false;
+            }
+        };
+
         if (requestCode == GALLERY) {
             if (data != null) {
                 Uri contentURI = data.getData();
-                Glide.with(this).load(contentURI).listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        image.setTag("uploaded");
-                        return false;
-                    }
-                }).placeholder(R.drawable.img_not_found).fitCenter().into(image);
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-////                    String path = saveImage(bitmap);
-//                    Toast.makeText(CreateRecipeActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-////                    image.setImageURI(contentURI);
-//                    image.setImageBitmap(bitmap);
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(CreateRecipeActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-//                }
+                Glide.with(this).load(contentURI).listener(requestListener).placeholder(R.drawable.img_not_found).fitCenter().into(image);
             }
-
         } else if (requestCode == CAMERA) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            Glide.with(this).load(thumbnail).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    image.setTag("uploaded");
-                    return false;
-                }
-            }).placeholder(R.drawable.img_not_found).fitCenter().into(image);
-//            image.setImageBitmap(thumbnail);
-
-//            saveImage(thumbnail);
-            Toast.makeText(CreateRecipeActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+            if (data != null) {
+                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+                Glide.with(this).load(thumbnail).listener(requestListener).placeholder(R.drawable.img_not_found).fitCenter().into(image);
+            }
+            else
+                Toast.makeText(this,"Could not upload image",Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private String saveImage(Bitmap thumbnail) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            File f = new File(wallpaperDirectory, FirebaseAuth.getInstance().getCurrentUser().getUid() + "_" + ".jpg");
-
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
     }
 
     private void checkInputField() {
-        boolean isReady = editName.getText().toString().trim().length()>0 && editPreparationTime.getText().toString().trim().length()>0 && addedIngredientsFrame.getChildCount()>0 && editInstructions.getText().toString().trim().length()>0;
+        boolean isReady =
+                editName.getText().toString().trim().length()>0
+                && editPreparationTime.getText().toString().trim().length()>0
+                && addedIngredientsFrame.getChildCount()>0
+                && editInstructions.getText().toString().trim().length()>0;
         if (isReady) {
             saveRecipeBtn.setEnabled(true);
         }

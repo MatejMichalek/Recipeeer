@@ -39,13 +39,5 @@ public class RecipeFromAPI {
         this.publisher = publisher;
         this.instructions = instructions;
         this.imageURL = imageURL;
-
-//        correctInstructions();
     }
-
-//    private void correctInstructions() {
-////        StringBuilder builder = new StringBuilder(instructions);
-//        instructions.replace("\n","\n\n");
-//
-//    }
 }

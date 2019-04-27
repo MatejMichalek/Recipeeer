@@ -1,9 +1,6 @@
 package com.example.recipeeer.domain;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;

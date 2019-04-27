@@ -7,22 +7,16 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.recipeeer.R;
-import com.example.recipeeer.domain.PagingHelper;
 import com.example.recipeeer.domain.RecipeListFromAPI;
 import com.example.recipeeer.domain.RecipeViewModel;
-import com.example.recipeeer.domain.SearchedRecipesListAdapter;
-import com.example.recipeeer.domain.UserListAdapter;
 import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
 
 public class SearchActivity extends AppCompatActivity implements SearchedRecipesListAdapter.OnSearchListItemClickListener {
@@ -57,7 +51,6 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
 
         mRecipeViewModel.search(searchTerm,0);
 
-//        adapter.setSearchedRecipes(mRecipeViewModel.getSearchedRecipes(searchTerm));
         mRecipeViewModel.getSearchedRecipes(searchTerm).observe(this, new Observer<RecipeListFromAPI>() {
             @Override
             public void onChanged(RecipeListFromAPI recipeListFromAPI) {
