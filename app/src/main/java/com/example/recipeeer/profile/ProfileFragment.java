@@ -1,4 +1,4 @@
-package com.example.recipeeer.main;
+package com.example.recipeeer.profile;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,13 +25,15 @@ import android.widget.Toast;
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.User;
 import com.example.recipeeer.domain.UserViewModel;
+import com.example.recipeeer.main.ActivityWithDrawer;
+import com.example.recipeeer.main.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ProfileFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton fab;
-    private UserViewModel mUserViewModel;
+    private ProfileViewModel mProfileViewModel;
     private Spinner mSpinner;
     private AlertDialog mDialog;
 
@@ -50,14 +52,14 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
 
-        mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
-        mUserViewModel.getUser().observe(this, new Observer<User>() {
+        mProfileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+
+        mProfileViewModel.getUser(((MainActivity) getActivity()).getCurrentUser().getEmail()).observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 if (user != null) {
                     ((TextView) getActivity().findViewById(R.id.userEmailText)).setText(user.getEmail());
                     ((EditText) getActivity().findViewById(R.id.usernameEdit)).setText(user.getName());
-
                     mSpinner.setSelection(user.getGender());
                 }
             }
@@ -83,7 +85,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mUserViewModel.updateUserGender(((TextView) getActivity().findViewById(R.id.userEmailText)).getText().toString(),position);
+                mProfileViewModel.updateUserGender(((TextView) getActivity().findViewById(R.id.userEmailText)).getText().toString(),position);
             }
 
             @Override
@@ -96,9 +98,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
 
     private void createEditDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle("Edit username");
-//        builder.setMessage("This is the example code snippet to disable button if edittext attached to mDialog is empty.");
         DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
             private void updateUserInDB() {
                 String email = ((TextView) getActivity().findViewById(R.id.userEmailText)).getText().toString();
                 String username = ((EditText) mDialog.findViewById(R.id.dialogEditName)).getText().toString().trim();
-                mUserViewModel.updateUsername(email,username);
+                mProfileViewModel.updateUsername(email,username);
             }
         };
         builder.setPositiveButton("Save", dialogOnClickListener);

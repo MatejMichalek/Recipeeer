@@ -1,4 +1,4 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.myRecipes;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.recipeeer.R;
+import com.example.recipeeer.domain.Recipe;
 
 import java.util.List;
 

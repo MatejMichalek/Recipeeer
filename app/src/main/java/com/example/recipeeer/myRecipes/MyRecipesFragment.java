@@ -1,4 +1,4 @@
-package com.example.recipeeer.main;
+package com.example.recipeeer.myRecipes;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.recipeeer.R;
-import com.example.recipeeer.domain.MyRecipesListAdapter;
 import com.example.recipeeer.domain.Recipe;
-import com.example.recipeeer.domain.RecipeViewModel;
+import com.example.recipeeer.main.ActivityWithDrawer;
+import com.example.recipeeer.main.MainActivity;
 import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     private OnFragmentInteractionListener mListener;
 
     private FloatingActionButton fab;
-    private RecipeViewModel mRecipeViewModel;
+    private MyRecipesViewModel mMyRecipesViewModel;
     private MyRecipesListAdapter mAdapter;
 
     public MyRecipesFragment() {
@@ -47,16 +46,15 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        mRecipeViewModel.getAllMyRecipes(((MainActivity) getActivity()).getCurrentUser().getEmail()).observe(this, new Observer<List<Recipe>>() {
+        mMyRecipesViewModel = ViewModelProviders.of(this).get(MyRecipesViewModel.class);
+
+        mMyRecipesViewModel.getAllMyRecipes(((MainActivity) getActivity()).getCurrentUser().getEmail()).observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(List<Recipe> recipes) {
                 mAdapter.setMyRecipes(recipes);
             }
         });
 
-
-        // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
 
         View view = inflater.inflate(R.layout.fragment_my_recipes, container, false);

@@ -12,12 +12,12 @@
 
     <fragment
         android:id="@+id/myRecipesFragment"
-        android:name="com.example.recipeeer.main.MyRecipesFragment"
+        android:name="com.example.recipeeer.myRecipes.MyRecipesFragment"
         android:label="fragment_my_recipes"
         tools:layout="@layout/fragment_my_recipes" />
     <fragment
         android:id="@+id/favoriteRecipesFragment"
-        android:name="com.example.recipeeer.main.FavoriteRecipesFragment"
+        android:name="com.example.recipeeer.favorites.FavoriteRecipesFragment"
         android:label="fragment_favorite_recipes"
         tools:layout="@layout/fragment_favorite_recipes" />
     <action android:id="@+id/action_global_welcomeFragment" app:destination="@id/welcomeFragment" />
@@ -25,7 +25,7 @@
     <action android:id="@+id/action_global_myRecipesFragment" app:destination="@id/myRecipesFragment"/>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.recipeeer.main.ProfileFragment"
+        android:name="com.example.recipeeer.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <action android:id="@+id/action_global_profileFragment" app:destination="@id/profileFragment"/>

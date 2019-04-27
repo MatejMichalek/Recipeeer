@@ -21,7 +21,7 @@ import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
 
 public class SearchActivity extends AppCompatActivity implements SearchedRecipesListAdapter.OnSearchListItemClickListener {
 
-    private RecipeViewModel mRecipeViewModel;
+    private SearchViewModel mSearchViewModel;
     private SearchedRecipesListAdapter adapter;
     private int userID;
     private String searchTerm;
@@ -41,7 +41,7 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Search \""+searchTerm+"\"");
 
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mSearchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView_myRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,9 +49,9 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
         adapter = new SearchedRecipesListAdapter(this,this);
         recyclerView.setAdapter(adapter);
 
-        mRecipeViewModel.search(searchTerm,0);
+        mSearchViewModel.search(searchTerm,0);
 
-        mRecipeViewModel.getSearchedRecipes(searchTerm).observe(this, new Observer<RecipeListFromAPI>() {
+        mSearchViewModel.getSearchedRecipes(searchTerm).observe(this, new Observer<RecipeListFromAPI>() {
             @Override
             public void onChanged(RecipeListFromAPI recipeListFromAPI) {
                 adapter.setSearchedRecipes(recipeListFromAPI);
@@ -63,10 +63,10 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.previousPage:
-                        mRecipeViewModel.search(searchTerm,-1);
+                        mSearchViewModel.search(searchTerm,-1);
                         break;
                     case R.id.nextPage:
-                        mRecipeViewModel.search(searchTerm,1);
+                        mSearchViewModel.search(searchTerm,1);
                         break;
                     default:
                         break;
@@ -79,7 +79,7 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
         previousPage.setOnClickListener(listener);
         nextPage.setOnClickListener(listener);
 
-        mRecipeViewModel.getPagingHelper().observe(this, new Observer<PagingHelper>() {
+        mSearchViewModel.getPagingHelper().observe(this, new Observer<PagingHelper>() {
             @Override
             public void onChanged(PagingHelper pagingHelper) {
                 if (pagingHelper != null) {
@@ -88,7 +88,6 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
                 }
             }
         });
-
     }
 
     @Override

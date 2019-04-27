@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
@@ -25,10 +24,8 @@ import com.bumptech.glide.request.target.Target;
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Favorites;
 import com.example.recipeeer.domain.Ingredient;
-import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeFromAPI;
-import com.example.recipeeer.domain.RecipeViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -45,8 +42,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
 
-    private RecipeViewModel recipeViewModel;
-    private IngredientViewModel ingredientsViewModel;
+    private DetailsViewModel mDetailsViewModel;
     private TextView mRecipeTitle;
     private TextView mAuthor;
     private TextView mPreparationTime;
@@ -56,7 +52,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private Integer currentUserID;
     private Object recipeID;
     private boolean isMyRecipe;
-    private Recipe mRecipe;
     private StorageReference storageReference;
 
 
@@ -77,7 +72,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         mIngredientsFrame = findViewById(R.id.ingredientsFrame);
         mImage = findViewById(R.id.recipeDetailsImage);
 
-        recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mDetailsViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
 
         if (isMyRecipe) {
 
@@ -99,10 +94,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
             });
 
-
-            ingredientsViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
-
-            recipeViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
+            mDetailsViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
                 @Override
                 public void onChanged(Recipe recipe) {
                     if (recipe != null) {
@@ -113,19 +105,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
             });
 
-            ingredientsViewModel.getIngredientsForRecipe((int) recipeID).observe(this, new Observer<List<Ingredient>>() {
+            mDetailsViewModel.getIngredientsForRecipe((int) recipeID).observe(this, new Observer<List<Ingredient>>() {
                 @Override
                 public void onChanged(List<Ingredient> ingredients) {
                     displayIngredients(ingredients);
                 }
             });
+
             if(mAuthor.getText().toString().trim().length()<1)
                 ((LinearLayout) mAuthor.getParent()).setVisibility(View.GONE);
         }
         else {
-
-
-            RecipeFromAPI recipe = recipeViewModel.getRecipeFromApi((String) recipeID);
+            RecipeFromAPI recipe = mDetailsViewModel.getRecipeFromApi((String) recipeID);
             mRecipeTitle.setText(recipe.title);
             mAuthor.setText(String.valueOf(recipe.publisher));
             mPreparationTime.setText(String.valueOf(recipe.preparationTime)+" min");
@@ -205,7 +196,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_delete:
-                int result = recipeViewModel.delete((int)recipeID);
+                int result = mDetailsViewModel.delete((int)recipeID);
                 if (result == 1) {
                     storageReference.delete();
                     finish();
@@ -214,12 +205,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             case R.id.action_favorite:
                 Toast.makeText(this,"Add favorite",Toast.LENGTH_LONG).show();
                 int time  = Integer.parseInt(mPreparationTime.getText().toString().substring(0,mPreparationTime.getText().length()-4));
-                recipeViewModel.insert(new Favorites(currentUserID,(String) recipeID,mRecipeTitle.getText().toString(),time));
+                mDetailsViewModel.insert(new Favorites(currentUserID,(String) recipeID,mRecipeTitle.getText().toString(),time));
                 return false;
 
             case R.id.action_favourite_false:
                 Toast.makeText(this,"Remove favorite",Toast.LENGTH_LONG).show();
-                recipeViewModel.delete(new Favorites(currentUserID,(String) recipeID));
+                mDetailsViewModel.delete(new Favorites(currentUserID,(String) recipeID));
                 return false;
 
         }
@@ -233,7 +224,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
         else {
             getMenuInflater().inflate(R.menu.api_recipe_details_bar_menu,menu);
-            recipeViewModel.getFavoritesForUser(currentUserID).observe(this, new Observer<List<Favorites>>() {
+            mDetailsViewModel.getFavoritesForUser(currentUserID).observe(this, new Observer<List<Favorites>>() {
                 @Override
                 public void onChanged(List<Favorites> favorites) {
                     boolean isPresent = false;

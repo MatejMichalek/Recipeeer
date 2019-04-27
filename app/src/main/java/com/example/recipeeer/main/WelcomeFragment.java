@@ -15,7 +15,6 @@ import android.widget.EditText;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.QuickSearchItem;
-import com.example.recipeeer.domain.UserViewModel;
 import com.example.recipeeer.search.OnSearchIconClickListener;
 import com.example.recipeeer.search.QuickSearchAdapter;
 import com.example.recipeeer.search.SearchActivity;
@@ -26,7 +25,6 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,7 +33,7 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
     private OnFragmentInteractionListener mListener;
 
     private FloatingActionButton fab;
-    private UserViewModel mUserViewModel;
+
     private QuickSearchAdapter mAdapter;
     private EditText searchEdit;
 
@@ -52,7 +50,6 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mUserViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);

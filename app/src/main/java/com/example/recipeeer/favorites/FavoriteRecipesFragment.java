@@ -1,4 +1,4 @@
-package com.example.recipeeer.main;
+package com.example.recipeeer.favorites;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,11 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.recipeeer.domain.Favorites;
-import com.example.recipeeer.domain.FavoritesListAdapter;
-import com.example.recipeeer.domain.MyRecipesListAdapter;
-import com.example.recipeeer.domain.Recipe;
-import com.example.recipeeer.domain.RecipeViewModel;
-import com.example.recipeeer.domain.User;
+import com.example.recipeeer.main.ActivityWithDrawer;
+import com.example.recipeeer.main.MainActivity;
 import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,13 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.recipeeer.R;
-import com.google.firebase.auth.FirebaseAuth;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -40,7 +33,7 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
 
 
     private FloatingActionButton fab;
-    private RecipeViewModel mRecipeViewModel;
+    private FavoriteRecipesViewModel mFavoriteRecipesViewModel;
     private FavoritesListAdapter mAdapter;
 
     public FavoriteRecipesFragment() {
@@ -55,18 +48,15 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mFavoriteRecipesViewModel = ViewModelProviders.of(this).get(FavoriteRecipesViewModel.class);
         int currentUserId = ((MainActivity) getActivity()).getCurrentUser().getId();
-            mRecipeViewModel.getFavoritesForUser(currentUserId).observe(this, new Observer<List<Favorites>>() {
-                @Override
-                public void onChanged(List<Favorites> recipes) {
-                    mAdapter.setFavorites(recipes);
-                }
-            });
 
-
-        // Inflate the layout for this fragment
-
+        mFavoriteRecipesViewModel.getFavoritesForUser(currentUserId).observe(this, new Observer<List<Favorites>>() {
+            @Override
+            public void onChanged(List<Favorites> recipes) {
+                mAdapter.setFavorites(recipes);
+            }
+        });
 
         fab = getActivity().findViewById(R.id.fab);
 
@@ -89,7 +79,7 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
     public void onResume() {
         super.onResume();
         fab.hide();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favourite recipes");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favorite recipes");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites);
     }
 

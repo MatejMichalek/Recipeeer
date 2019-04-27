@@ -28,9 +28,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Ingredient;
-import com.example.recipeeer.domain.IngredientViewModel;
 import com.example.recipeeer.domain.Recipe;
-import com.example.recipeeer.domain.RecipeViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -62,8 +60,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
     private static final int CAMERA = 222;
 
     private ImageView image;
-    private RecipeViewModel mRecipeViewModel;
-    private IngredientViewModel mIngredientViewModel;
+    private CreateRecipeViewModel mCreateRecipeViewModel;
     private EditText editName;
     private EditText editPreparationTime;
     private EditText editIngredients;
@@ -97,7 +94,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
             }
         });
 
-        mIngredientViewModel = ViewModelProviders.of(CreateRecipeActivity.this).get(IngredientViewModel.class);
+        mCreateRecipeViewModel = ViewModelProviders.of(CreateRecipeActivity.this).get(CreateRecipeViewModel.class);
 
         editName = findViewById(R.id.editName);
         image = findViewById(R.id.recipeImage);
@@ -116,7 +113,8 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.layout_ingredient_item,addedIngredientsFrame,false);
                 Ingredient ingredient = new Ingredient(editIngredients.getText().toString().trim());
-                int ingredientNo = mIngredientViewModel.addIngredient(ingredient);
+                int ingredientNo = mCreateRecipeViewModel.addIngredient(ingredient);
+
                 ((TextView) view.findViewWithTag("IngredientText")).setText(editIngredients.getText().toString());
                 ((LinearLayout) view).getChildAt(2).setTag(ingredientNo-1);
 
@@ -125,9 +123,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 checkInputField();
             }
         });
-
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-
 
         TextWatcher mWatcher = new TextWatcher() {
             @Override
@@ -157,9 +152,13 @@ public class CreateRecipeActivity extends AppCompatActivity {
         saveRecipeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Recipe recipe = new Recipe(editName.getText().toString().trim(),Integer.parseInt(editPreparationTime.getText().toString().trim()),editInstructions.getText().toString().trim(),currentUserID);
-                int id = mRecipeViewModel.insert(recipe);
-                mIngredientViewModel.insertIngredientsForRecipe(id);
+                Recipe recipe =
+                        new Recipe(editName.getText().toString().trim(),
+                                Integer.parseInt(editPreparationTime.getText().toString().trim()),
+                                editInstructions.getText().toString().trim(),
+                                currentUserID);
+                int id = mCreateRecipeViewModel.insert(recipe);
+                mCreateRecipeViewModel.insertIngredientsForRecipe(id);
                 if (isImageSelected) {
                     storeIntoFirebase(id);
                 }
@@ -330,7 +329,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     public void removeIngredient(View view) {
         int ingredientIndex = Integer.parseInt(view.getTag().toString());
-        int noOfLeftIngredients =  mIngredientViewModel.removeIngredient(ingredientIndex);
+        int noOfLeftIngredients =  mCreateRecipeViewModel.removeIngredient(ingredientIndex);
         for (int i = ingredientIndex+1;i<=noOfLeftIngredients;i++) {
             addedIngredientsFrame.getChildAt(i).findViewWithTag(i).setTag(i-1);
         }
