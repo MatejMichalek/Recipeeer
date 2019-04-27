@@ -1,7 +1,12 @@
-package com.example.recipeeer.domain;
+package com.example.recipeeer.db;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.example.recipeeer.domain.Favorites;
+import com.example.recipeeer.domain.Ingredient;
+import com.example.recipeeer.domain.Recipe;
+import com.example.recipeeer.domain.User;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -9,7 +14,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {User.class,Recipe.class,Ingredient.class,Favorites.class},version = 1,exportSchema = false)
+@Database(entities = {User.class, Recipe.class, Ingredient.class, Favorites.class},version = 1,exportSchema = false)
 public abstract class RecipeeerDatabase extends RoomDatabase {
 
     private static volatile RecipeeerDatabase INSTANCE;
