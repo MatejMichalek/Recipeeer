@@ -10,6 +10,7 @@ import com.example.recipeeer.domain.FavoritesListAdapter;
 import com.example.recipeeer.domain.MyRecipesListAdapter;
 import com.example.recipeeer.domain.Recipe;
 import com.example.recipeeer.domain.RecipeViewModel;
+import com.example.recipeeer.domain.User;
 import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -55,12 +56,14 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        mRecipeViewModel.getFavoritesForUser(((MainActivity) getActivity()).getCurrentUser().getId()).observe(this, new Observer<List<Favorites>>() {
-            @Override
-            public void onChanged(List<Favorites> recipes) {
-                mAdapter.setFavorites(recipes);
-            }
-        });
+        int currentUserId = ((MainActivity) getActivity()).getCurrentUser().getId();
+            mRecipeViewModel.getFavoritesForUser(currentUserId).observe(this, new Observer<List<Favorites>>() {
+                @Override
+                public void onChanged(List<Favorites> recipes) {
+                    mAdapter.setFavorites(recipes);
+                }
+            });
+
 
         // Inflate the layout for this fragment
 

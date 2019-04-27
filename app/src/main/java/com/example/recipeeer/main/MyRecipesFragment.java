@@ -48,7 +48,7 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
                              Bundle savedInstanceState) {
 
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        mRecipeViewModel.getAllMyRecipes(FirebaseAuth.getInstance().getCurrentUser().getEmail()).observe(this, new Observer<List<Recipe>>() {
+        mRecipeViewModel.getAllMyRecipes(((MainActivity) getActivity()).getCurrentUser().getEmail()).observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(List<Recipe> recipes) {
                 mAdapter.setMyRecipes(recipes);

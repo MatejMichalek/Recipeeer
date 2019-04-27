@@ -15,7 +15,6 @@ import android.widget.EditText;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.QuickSearchItem;
-import com.example.recipeeer.domain.UserListAdapter;
 import com.example.recipeeer.domain.UserViewModel;
 import com.example.recipeeer.search.OnSearchIconClickListener;
 import com.example.recipeeer.search.QuickSearchAdapter;
@@ -37,7 +36,6 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
 
     private FloatingActionButton fab;
     private UserViewModel mUserViewModel;
-    private UserListAdapter adapter;
     private QuickSearchAdapter mAdapter;
     private EditText searchEdit;
 

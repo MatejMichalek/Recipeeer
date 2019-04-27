@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             mUserViewModel = ViewModelProviders.of(this,new UserViewModelFactory(getApplication(), mFirebaseUser.getEmail())).get(UserViewModel.class);
             mNavigationView = findViewById(R.id.nav_view);
 
+            if (savedInstanceState != null)
+                currentUser = mUserViewModel.getUser().getValue();
+
             mUserViewModel.getUser().observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
@@ -65,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             Toolbar mToolbar = findViewById(R.id.mToolbar);
             setSupportActionBar(mToolbar);
 
-            Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
+            if (savedInstanceState == null)
+                Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
+
 
             mDrawerLayout = findViewById(R.id.drawerLayout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,mDrawerLayout,mToolbar,R.string.open,R.string.close);
