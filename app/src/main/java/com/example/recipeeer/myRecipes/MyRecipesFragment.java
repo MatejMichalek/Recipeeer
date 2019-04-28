@@ -1,12 +1,17 @@
 package com.example.recipeeer.myRecipes;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Recipe;
@@ -17,16 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.OnListItemClickListener{
-
-    private OnFragmentInteractionListener mListener;
 
     private FloatingActionButton fab;
     private MyRecipesListAdapter mAdapter;
@@ -66,13 +62,6 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -83,23 +72,6 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public void onListItemClick(int recipeID) {
         // starts recipe details activity with recipe id from recycler view
         Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
@@ -107,20 +79,5 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
         intent.putExtra("currentUserEmail", ((MainActivity) getActivity()).getCurrentUser().getEmail());
         intent.putExtra("recipeID",recipeID);
         startActivity(intent);
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }

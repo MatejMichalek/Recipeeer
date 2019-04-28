@@ -1,24 +1,11 @@
 package com.example.recipeeer.main;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.recipeeer.R;
-import com.example.recipeeer.createRecipe.CreateRecipeActivity;
-import com.example.recipeeer.domain.User;
-import com.example.recipeeer.favorites.FavoriteRecipesFragment;
-import com.example.recipeeer.login.LogInActivity;
-import com.example.recipeeer.myRecipes.MyRecipesFragment;
-import com.example.recipeeer.profile.ProfileFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -30,7 +17,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
-public class MainActivity extends AppCompatActivity implements ActivityWithDrawer, WelcomeFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, MyRecipesFragment.OnFragmentInteractionListener, FavoriteRecipesFragment.OnFragmentInteractionListener {
+import com.example.recipeeer.R;
+import com.example.recipeeer.createRecipe.CreateRecipeActivity;
+import com.example.recipeeer.domain.User;
+import com.example.recipeeer.login.LogInActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class MainActivity extends AppCompatActivity implements ActivityWithDrawer {
 
     private User currentUser;
     private DrawerLayout mDrawerLayout;
@@ -139,11 +135,6 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                 }
             });
         }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override

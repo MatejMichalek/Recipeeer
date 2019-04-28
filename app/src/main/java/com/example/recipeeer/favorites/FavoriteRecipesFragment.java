@@ -1,15 +1,10 @@
 package com.example.recipeeer.favorites;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-
-import com.example.recipeeer.domain.Favorites;
-import com.example.recipeeer.main.ActivityWithDrawer;
-import com.example.recipeeer.main.MainActivity;
-import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -18,19 +13,16 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.recipeeer.R;
+import com.example.recipeeer.domain.Favorites;
+import com.example.recipeeer.main.ActivityWithDrawer;
+import com.example.recipeeer.main.MainActivity;
+import com.example.recipeeer.recipeDetails.RecipeDetailsActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 public class FavoriteRecipesFragment extends Fragment implements FavoritesListAdapter.OnListItemClickListener {
-
-    private OnFragmentInteractionListener mListener;
-
 
     private FloatingActionButton fab;
     private FavoriteRecipesViewModel mFavoriteRecipesViewModel;
@@ -69,13 +61,7 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
 
         mAdapter = new FavoritesListAdapter(getActivity(), this);
         recyclerView.setAdapter(mAdapter);
-        return view;    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        return view;
     }
 
     @Override
@@ -88,43 +74,11 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public void onListItemClick(String recipeID) {
         // starts activity for recipe details
         Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
         intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
         intent.putExtra("recipeFromApiID",recipeID);
         startActivity(intent);
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }
