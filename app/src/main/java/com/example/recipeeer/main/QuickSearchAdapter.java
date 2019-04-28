@@ -1,4 +1,4 @@
-package com.example.recipeeer.search;
+package com.example.recipeeer.main;
 
 import android.view.LayoutInflater;
 import android.view.View;

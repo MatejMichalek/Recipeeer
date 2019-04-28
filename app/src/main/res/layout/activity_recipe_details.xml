@@ -23,7 +23,7 @@
                 android:id="@+id/recipeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Recipe name"
+                android:text="@string/recipe_details_name"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:fontFamily="@font/roboto_medium"
@@ -50,7 +50,7 @@
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textSize="25sp"
-                    android:text="Publisher:"
+                    android:text="@string/publisher"
                     android:layout_marginEnd="10dp"/>
 
                 <TextView
@@ -87,7 +87,7 @@
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textSize="25sp"
-                    android:text="Preparation time:"
+                    android:text="@string/recipe_details_preparation_time"
                     android:layout_marginEnd="10dp"/>
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:gravity="start|center"
                     android:fontFamily="@font/roboto_medium"
                     android:textSize="20sp"
-                    android:text="Time in minutes"/>
+                    android:text="@string/details_time_in_minutes"/>
 
             </LinearLayout>
 
@@ -116,17 +116,13 @@
                     android:fontFamily="@font/roboto_medium"
                     android:textStyle="bold"
                     android:textSize="25sp"
-                    android:text="Ingredients:"/>
+                    android:text="@string/details_ingredients"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/ingredientsFrame">
-
-                    <!--<include layout="@layout/layout_recipe_details_ingredient_item"-->
-                    <!--android:id="@+id/ingredientsFrame"></include>-->
-
                 </LinearLayout>
 
             </LinearLayout>
@@ -145,7 +141,7 @@
                     android:fontFamily="@font/roboto_medium"
                     android:textStyle="bold"
                     android:textSize="25sp"
-                    android:text="Instructions:"/>
+                    android:text="@string/details_instructions"/>
 
                 <TextView
                     android:id="@+id/instructions"

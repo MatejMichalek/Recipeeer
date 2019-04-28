@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <!--<color name="colorPrimary">#008577</color>-->
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#EF5350</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorSecondary">#EF5350</color>
     <color name="colorOnSecondary">#FFFFFF</color>
     <color name="colorTitle">#2C110A</color>
-    <!--another colors for title-->
-    <!--#673AB7-->
-    <!--#D13030-->
     <color name="colorAppBackground">#FFEE58</color>
     <color name="colorToolbar">#EF5350</color>
 </resources>

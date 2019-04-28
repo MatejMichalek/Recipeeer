@@ -16,6 +16,7 @@ import androidx.lifecycle.AndroidViewModel;
 public class CreateRecipeViewModel extends AndroidViewModel {
     private RecipeRepository recipeRepository;
     private IngredientRepository ingredientRepository;
+    // temporary list of ingredients for new recipe
     private List<Ingredient> ingredientsToAdd;
 
     public CreateRecipeViewModel(@NonNull Application application) {
@@ -40,11 +41,13 @@ public class CreateRecipeViewModel extends AndroidViewModel {
         return ingredientsToAdd.size();
     }
 
+    // finally save list of ingredients for given recipe to the local storage
     public void insertIngredientsForRecipe(int recipeID) {
         setRecipeID(recipeID);
         ingredientRepository.insertIngredients(ingredientsToAdd);
     }
 
+    // update recipeID field in all temporary ingredients
     private void setRecipeID(int recipeID) {
         for (Ingredient ingredient: ingredientsToAdd) {
             ingredient.setRecipeId(recipeID);

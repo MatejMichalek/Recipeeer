@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+// factory class for MainViewModel taking userEmail as parameter
 public class MainViewModelFactory implements ViewModelProvider.Factory {
     private Application mApplication;
     private String mParam;

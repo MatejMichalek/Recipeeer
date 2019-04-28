@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.RecipeListFromAPI;
@@ -30,6 +29,8 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        // try to get data from intent
+        // userID used to check user's favorite recipes
         userID = getIntent().getExtras().getInt("currentUserID");
         searchTerm = getIntent().getExtras().getString("searchTerm");
 
@@ -40,31 +41,39 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Search \""+searchTerm+"\"");
 
+        // creates view model for this activity
         mSearchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
 
+        // create recycler view and set adapter to it
         RecyclerView recyclerView = findViewById(R.id.recyclerView_myRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new SearchedRecipesListAdapter(this,this);
         recyclerView.setAdapter(adapter);
 
+        // start initial search where parameter page == 0
         mSearchViewModel.search(searchTerm,0);
 
-        mSearchViewModel.getSearchedRecipes(searchTerm).observe(this, new Observer<RecipeListFromAPI>() {
+        // start observing changes in the search list of recipes
+        mSearchViewModel.getSearchedRecipes().observe(this, new Observer<RecipeListFromAPI>() {
             @Override
             public void onChanged(RecipeListFromAPI recipeListFromAPI) {
+                // update adapter for recycler view
                 adapter.setSearchedRecipes(recipeListFromAPI);
             }
         });
 
+        // listener for paging buttons
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.previousPage:
+                        // request previous page of results from API
                         mSearchViewModel.search(searchTerm,-1);
                         break;
                     case R.id.nextPage:
+                        // request next page of results from API
                         mSearchViewModel.search(searchTerm,1);
                         break;
                     default:
@@ -78,10 +87,12 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
         previousPage.setOnClickListener(listener);
         nextPage.setOnClickListener(listener);
 
+        // start observing changes in PagingHelper object that holds total no of results and also current offset
         mSearchViewModel.getPagingHelper().observe(this, new Observer<PagingHelper>() {
             @Override
             public void onChanged(PagingHelper pagingHelper) {
                 if (pagingHelper != null) {
+                    // update UI regarding the data in PagingHelper
                     previousPage.setEnabled(pagingHelper.canGoToPreviousPage());
                     nextPage.setEnabled(pagingHelper.canGoToNextPage());
                 }
@@ -100,7 +111,7 @@ public class SearchActivity extends AppCompatActivity implements SearchedRecipes
 
     @Override
     public void onListItemClick(String recipeID) {
-        Toast.makeText(this,recipeID,Toast.LENGTH_LONG).show();
+        // start recipe detail activity on click on an item from recycler view
         Intent intent = new Intent(this, RecipeDetailsActivity.class);
         intent.putExtra("recipeFromApiID",recipeID);
         intent.putExtra("currentUserID",userID);

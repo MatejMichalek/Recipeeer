@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
+// custom scroll view class to make possible to scroll whole screen and also only editView
 public class CustomScrollView extends ScrollView {
     public CustomScrollView(Context context) {
         super(context);

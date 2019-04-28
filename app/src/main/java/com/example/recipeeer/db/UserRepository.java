@@ -16,12 +16,12 @@ public class UserRepository {
         userDao = db.userDao();
     }
 
-    public void insert (User user) {
-        new insertAsyncTask(userDao).execute(user);
-    }
-
     public LiveData<User> getUserByEmail(String email) {
         return userDao.getUserByEmail(email);
+    }
+
+    public void insert (User user) {
+        new insertAsyncTask(userDao).execute(user);
     }
 
     public void updateUsername(String email, String username) {
@@ -68,16 +68,6 @@ public class UserRepository {
         }
     }
 
-    private class UpdateUsername {
-        String email;
-        String updatedValue;
-
-        public UpdateUsername(String email, String updatedValue) {
-            this.email = email;
-            this.updatedValue = updatedValue;
-        }
-    }
-
     private static class updateUserGenderAsyncTask extends AsyncTask<UpdateUserGender,Void,Void> {
 
         UserDao asyncTaskDao;
@@ -90,6 +80,16 @@ public class UserRepository {
         protected Void doInBackground(UpdateUserGender... updateUserGenders) {
             asyncTaskDao.updateUserGender(updateUserGenders[0].email,updateUserGenders[0].gender);
             return null;
+        }
+    }
+
+    private class UpdateUsername {
+        String email;
+        String updatedValue;
+
+        public UpdateUsername(String email, String updatedValue) {
+            this.email = email;
+            this.updatedValue = updatedValue;
         }
     }
 

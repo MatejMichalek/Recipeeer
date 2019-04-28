@@ -10,7 +10,6 @@
         android:layout_width="8dp"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_point_black"
-
         android:layout_marginEnd="5dp"
         android:tint="@android:color/secondary_text_light"/>
 

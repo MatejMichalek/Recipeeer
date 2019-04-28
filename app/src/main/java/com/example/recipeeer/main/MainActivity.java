@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.createRecipe.CreateRecipeActivity;
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
     private User currentUser;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private MainViewModel mMainViewModel;
 
 
     @Override
@@ -42,20 +42,27 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // try to get firebase user instance
         FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (mFirebaseUser == null) {
+            // user is not logged in yet, therefore LogIn activity is started
             Intent intent = new Intent(this, LogInActivity.class);
             startActivity(intent);
             finish();
         }
         else {
-            mMainViewModel = ViewModelProviders.of(this,new MainViewModelFactory(getApplication(), mFirebaseUser.getEmail())).get(MainViewModel.class);
+            // user is logged in
+
+            // create view model for main activity
+            MainViewModel mainViewModel = ViewModelProviders.of(this, new MainViewModelFactory(getApplication(), mFirebaseUser.getEmail())).get(MainViewModel.class);
             mNavigationView = findViewById(R.id.nav_view);
 
+            // if saved bundle is not null, this activity was already created before, and that is why ViewModel already holds data for current user
             if (savedInstanceState != null)
-                currentUser = mMainViewModel.getUser().getValue();
+                currentUser = mainViewModel.getUser().getValue();
 
-            mMainViewModel.getUser().observe(this, new Observer<User>() {
+            // start observing changes in user's data in order to update info in drawer
+            mainViewModel.getUser().observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
                     if (user != null) {
@@ -65,25 +72,30 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                 }
             });
 
-            mMainViewModel.insert(new User(mFirebaseUser.getEmail(), mFirebaseUser.getDisplayName(),2));
+            // try to insert new user to local storage, if user already exists in db, nothing happens
+            mainViewModel.insert(new User(mFirebaseUser.getEmail(), mFirebaseUser.getDisplayName(),2));
 
             Toolbar mToolbar = findViewById(R.id.mToolbar);
             setSupportActionBar(mToolbar);
 
+            // if this activity is created for the first time, it specifies start/welcome fragment for this activity
             if (savedInstanceState == null)
                 Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
 
 
+            // creating drawer with toggle
             mDrawerLayout = findViewById(R.id.drawerLayout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,mDrawerLayout,mToolbar,R.string.open,R.string.close);
             mDrawerLayout.addDrawerListener(toggle);
             toggle.syncState();
 
+            // navigation view actions
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     menuItem.setChecked(true);
                     switch (menuItem.getItemId()) {
+                        // navigating by navigation graph and global actions for below fragments
                         case R.id.mHome:
                             Navigation.findNavController(findViewById(R.id.content_frame)).navigate(R.id.action_global_welcomeFragment);
                             break;
@@ -101,9 +113,11 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
                             break;
 
                         case R.id.logOut:
+                            // logging out from the system
                             FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(MainActivity.this,LogInActivity.class);
                             startActivity(intent);
+                            Toast.makeText(MainActivity.this,"Logged out",Toast.LENGTH_SHORT).show();
                             finish();
                             break;
                     }
@@ -116,9 +130,10 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // starting activity for creating recipe
                     Intent intent = new Intent(MainActivity.this, CreateRecipeActivity.class);
                     intent.putExtra("currentUserID",currentUser.getId());
+                    intent.putExtra("currentUserEmail", currentUser.getEmail());
                     startActivity(intent);
 
                 }
@@ -133,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
 
     @Override
     public void updateNavState(int selectedItemID) {
+        // update navigation view (makes selected item regarding current fragment)
         mNavigationView.setCheckedItem(selectedItemID);
     }
 
@@ -140,8 +156,4 @@ public class MainActivity extends AppCompatActivity implements ActivityWithDrawe
         return currentUser;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 }

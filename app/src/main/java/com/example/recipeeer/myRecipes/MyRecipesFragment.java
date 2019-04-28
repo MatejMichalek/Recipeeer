@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.Recipe;
@@ -30,7 +29,6 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     private OnFragmentInteractionListener mListener;
 
     private FloatingActionButton fab;
-    private MyRecipesViewModel mMyRecipesViewModel;
     private MyRecipesListAdapter mAdapter;
 
     public MyRecipesFragment() {
@@ -46,9 +44,11 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mMyRecipesViewModel = ViewModelProviders.of(this).get(MyRecipesViewModel.class);
+        // creates view model for this fragment
+        MyRecipesViewModel myRecipesViewModel = ViewModelProviders.of(this).get(MyRecipesViewModel.class);
 
-        mMyRecipesViewModel.getAllMyRecipes(((MainActivity) getActivity()).getCurrentUser().getEmail()).observe(this, new Observer<List<Recipe>>() {
+        // start observing changes in the list of my recipes
+        myRecipesViewModel.getAllMyRecipes(((MainActivity) getActivity()).getCurrentUser().getEmail()).observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(List<Recipe> recipes) {
                 mAdapter.setMyRecipes(recipes);
@@ -57,10 +57,10 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
 
         fab = getActivity().findViewById(R.id.fab);
 
+        // inflates recycler view and sets adapter to it
         View view = inflater.inflate(R.layout.fragment_my_recipes, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_myRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         mAdapter = new MyRecipesListAdapter(getActivity(), this);
         recyclerView.setAdapter(mAdapter);
         return view;
@@ -76,6 +76,7 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
     @Override
     public void onResume() {
         super.onResume();
+        // updates UI - FAB, Drawer and ActionBar
         fab.show();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My recipes");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.myRecipes); //just add this line
@@ -100,10 +101,11 @@ public class MyRecipesFragment extends Fragment implements MyRecipesListAdapter.
 
     @Override
     public void onListItemClick(int recipeID) {
+        // starts recipe details activity with recipe id from recycler view
         Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
         intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
+        intent.putExtra("currentUserEmail", ((MainActivity) getActivity()).getCurrentUser().getEmail());
         intent.putExtra("recipeID",recipeID);
-        Toast.makeText(getActivity(),"Recipe: "+String.valueOf(recipeID)+" CurrentUser: "+String.valueOf(((MainActivity) getActivity()).getCurrentUser().getId()),Toast.LENGTH_LONG).show();
         startActivity(intent);
     }
 

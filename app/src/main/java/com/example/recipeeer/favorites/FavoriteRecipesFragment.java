@@ -48,9 +48,11 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // creates view model for this fragment
         mFavoriteRecipesViewModel = ViewModelProviders.of(this).get(FavoriteRecipesViewModel.class);
         int currentUserId = ((MainActivity) getActivity()).getCurrentUser().getId();
 
+        // start observing changes in user's favorite recipes
         mFavoriteRecipesViewModel.getFavoritesForUser(currentUserId).observe(this, new Observer<List<Favorites>>() {
             @Override
             public void onChanged(List<Favorites> recipes) {
@@ -60,6 +62,7 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
 
         fab = getActivity().findViewById(R.id.fab);
 
+        // inflates recycler view and set adapter for it
         View view = inflater.inflate(R.layout.fragment_favorite_recipes, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_myRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -78,6 +81,7 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
     @Override
     public void onResume() {
         super.onResume();
+        // updates UI - FAB, Drawer and ActionBar
         fab.hide();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favorite recipes");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.favorites);
@@ -102,10 +106,10 @@ public class FavoriteRecipesFragment extends Fragment implements FavoritesListAd
 
     @Override
     public void onListItemClick(String recipeID) {
+        // starts activity for recipe details
         Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
         intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
         intent.putExtra("recipeFromApiID",recipeID);
-        Toast.makeText(getActivity(),"Recipe: "+String.valueOf(recipeID)+" CurrentUser: "+String.valueOf(((MainActivity) getActivity()).getCurrentUser().getId()),Toast.LENGTH_LONG).show();
         startActivity(intent);
     }
 

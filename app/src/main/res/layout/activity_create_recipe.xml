@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/gggg">
+            android:id="@+id/forAnchor">
 
             <include layout="@layout/layout_action_bar"/>
 
@@ -37,11 +37,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="Name: "
+                        android:text="@string/create_recipe_name"
                         android:textSize="20sp"
                         android:textStyle="bold"/>
 
                     <EditText
+                        android:layout_marginStart="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/editName"
@@ -64,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Upload image"
+                    android:text="@string/upload_image_button_text"
                     android:paddingHorizontal="5dp"
                     style="@style/Widget.AppCompat.Button.Small"
                     android:background="@drawable/sign_in_btn"
@@ -83,11 +84,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center|end"
-                        android:text="Preparation time: "
+                        android:text="@string/create_recipe_preparation_time"
                         android:textSize="20sp"
                         android:textStyle="bold"/>
 
                     <EditText
+                        android:layout_marginStart="5dp"
                         android:layout_width="70dp"
                         android:layout_height="match_parent"
                         android:inputType="number"
@@ -99,7 +101,7 @@
                         android:layout_height="match_parent"
                         android:paddingTop="10dp"
                         android:gravity="center_vertical"
-                        android:text="min"
+                        android:text="@string/create_recipe_minutes_text"
                         android:textSize="15sp"/>
 
                 </LinearLayout>
@@ -118,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:layout_marginEnd="10dp"
-                        android:text="Ingredients:"
+                        android:text="@string/create_recipe_ingredients"
                         android:textSize="20sp"
                         android:textStyle="bold"/>
 
@@ -132,11 +134,6 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/ingredients"
                             android:orientation="vertical">
-
-                            <!--<include layout="@layout/layout_ingredient_item"-->
-                                <!--android:visibility="visible"></include>-->
-
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -144,16 +141,6 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:layout_marginStart="8dp">
-
-                            <!--<TextView-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:maxWidth="50dp"-->
-                                <!--android:layout_height="match_parent"-->
-                                <!--android:gravity="center|end"-->
-                                <!--android:text="1."-->
-                                <!--android:id="@+id/editIngredientNo"-->
-                                <!--android:textSize="20sp"-->
-                                <!--android:textStyle="bold"/>-->
 
                             <EditText
                                 android:layout_width="0dp"
@@ -168,7 +155,7 @@
                                 android:id="@+id/addIngredient"
                                 android:layout_width="50dp"
                                 android:layout_height="match_parent"
-                                android:text="Add"
+                                android:text="@string/add_ingredient_button"
                                 android:enabled="false"
                                 android:textColor="@color/colorToolbar"
                                 style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"/>
@@ -186,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:layout_marginEnd="10dp"
-                    android:text="Instructions:"
+                    android:text="@string/create_recipe_instructions"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
 
@@ -211,14 +198,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:contentDescription="Save new recipe"
-        android:text="Save"
+        android:contentDescription="@string/save_new_recipe_description"
+        android:text="@string/save_recipe_button"
         app:icon="@drawable/ic_save_black"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        app:layout_anchor="@id/gggg"
+        app:layout_anchor="@id/forAnchor"
         app:layout_anchorGravity="bottom|center"
         android:enabled="false"
-        android:id="@+id/saveRecipe"
-        />
+        android:id="@+id/saveRecipe"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

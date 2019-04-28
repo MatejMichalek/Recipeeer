@@ -40,7 +40,7 @@
                     android:paddingHorizontal="15dp"
                     android:textSize="13sp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Preparation time:"/>
+                    android:text="@string/recipe_item_preparation_time"/>
 
                 <TextView
                     android:id="@+id/recyclerViewItemRecipeTimeText"
@@ -50,9 +50,6 @@
                     android:fontFamily="@font/roboto_medium"/>
 
             </LinearLayout>
-
-
-
 
         </LinearLayout>
 

@@ -20,18 +20,20 @@ public class SearchViewModel extends AndroidViewModel {
         super(application);
         recipeRepository = new RecipeRepository(application);
         pagingHelper = new MutableLiveData<>();
+        // initialize paging helper
         ((MutableLiveData<PagingHelper>) pagingHelper).setValue(new PagingHelper(0,0));
         searchedRecipes = new MutableLiveData<>();
     }
 
     public void search(String searchTerm, int page) {
-        PagingHelper pagingHelper = this.pagingHelper.getValue();
-        RecipeListFromAPI list = recipeRepository.getSearchedRecipes(searchTerm,pagingHelper.getDesiredOffset(page));
+        PagingHelper helper = pagingHelper.getValue();
+        RecipeListFromAPI list = recipeRepository.getSearchedRecipes(searchTerm,helper.getDesiredOffset(page));
+        // update values in Paging helper and notify observers
         setPagingHelper(list.totalRecipes,list.offset);
         ((MutableLiveData<RecipeListFromAPI>) searchedRecipes).setValue(list);
     }
 
-    public LiveData<RecipeListFromAPI> getSearchedRecipes(String searchTerm) {
+    public LiveData<RecipeListFromAPI> getSearchedRecipes() {
         return searchedRecipes;
     }
 

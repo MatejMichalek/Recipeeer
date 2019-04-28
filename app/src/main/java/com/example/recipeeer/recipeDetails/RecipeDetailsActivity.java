@@ -50,6 +50,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private TextView mInstructions;
     private ImageView mImage;
     private Integer currentUserID;
+    private String currentUserEmail;
     private Object recipeID;
     private boolean isMyRecipe;
     private StorageReference storageReference;
@@ -59,6 +60,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
+        // check if it is recipe from API or user's own recipe
         isMyRecipe = checkIsMyRecipe();
 
         Toolbar mToolbar = findViewById(R.id.mToolbar);
@@ -72,17 +74,19 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         mIngredientsFrame = findViewById(R.id.ingredientsFrame);
         mImage = findViewById(R.id.recipeDetailsImage);
 
+        // create view model for this activity
         mDetailsViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
 
         if (isMyRecipe) {
-
-            storageReference = FirebaseStorage.getInstance().getReference().child("users/"+String.valueOf(currentUserID)+"/recipes/"+String.valueOf((int) recipeID));
-
+            // is user's own recipe
+            // try to get image from firebase storage reference
+            storageReference = FirebaseStorage.getInstance().getReference().child("users/"+ currentUserEmail +"/recipes/"+ recipeID);
             storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     Glide.with(RecipeDetailsActivity.this)
                             .load(uri)
+                            // transform downloaded image for UI
                             .apply(new RequestOptions().transform(new RoundedCorners(30), new FitCenter()))
                             .placeholder(R.drawable.img_not_found)
                             .into(mImage);
@@ -90,21 +94,25 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    // image doesn't exist in firebase storage or smth went wrong while downloading
                     mImage.setVisibility(View.GONE);
                 }
             });
 
+            // observe changes in specific recipe
             mDetailsViewModel.getRecipeById((int) recipeID).observe(this, new Observer<Recipe>() {
                 @Override
                 public void onChanged(Recipe recipe) {
                     if (recipe != null) {
+                        // update UI
                         mRecipeTitle.setText(recipe.getName());
-                        mPreparationTime.setText(String.valueOf(recipe.getPreparationTime())+" min");
+                        mPreparationTime.setText(recipe.getPreparationTime() +" min");
                         mInstructions.setText(recipe.getInstruction());
                     }
                 }
             });
 
+            // observe changes in ingredients for given recipe
             mDetailsViewModel.getIngredientsForRecipe((int) recipeID).observe(this, new Observer<List<Ingredient>>() {
                 @Override
                 public void onChanged(List<Ingredient> ingredients) {
@@ -112,42 +120,58 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
             });
 
+            // if author textView is empty which means that author is the current user, this view disappears
             if(mAuthor.getText().toString().trim().length()<1)
                 ((LinearLayout) mAuthor.getParent()).setVisibility(View.GONE);
         }
         else {
-            RecipeFromAPI recipe = mDetailsViewModel.getRecipeFromApi((String) recipeID);
-            mRecipeTitle.setText(recipe.title);
-            mAuthor.setText(String.valueOf(recipe.publisher));
-            mPreparationTime.setText(String.valueOf(recipe.preparationTime)+" min");
-            mInstructions.setText(recipe.instructions);
+            // recipe is from API
 
-            Glide.with(this)
-                    .load(recipe.imageURL)
-                    .apply(new RequestOptions().transform(new RoundedCorners(30), new FitCenter()))
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            mImage.setVisibility(View.GONE);
-                            return false;
-                        }
+            // try to get recipe from API through view model
+            mDetailsViewModel.getRecipeFromApi((String) recipeID).observe(this, new Observer<RecipeFromAPI>() {
+                @Override
+                public void onChanged(RecipeFromAPI recipe) {
+                    // update UI
+                    if (recipe != null) {
+                        mRecipeTitle.setText(recipe.title);
+                        mAuthor.setText(String.valueOf(recipe.publisher));
+                        mPreparationTime.setText(recipe.preparationTime +" min");
+                        mInstructions.setText(recipe.instructions);
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .placeholder(R.drawable.img_not_found)
-                    .into(mImage);
+                        // try to download image from the URI obtained in RecipeFromAPI object
+                        Glide.with(RecipeDetailsActivity.this)
+                                .load(recipe.imageURL)
+                                .apply(new RequestOptions().transform(new RoundedCorners(30), new FitCenter()))
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        mImage.setVisibility(View.GONE);
+                                        return false;
+                                    }
 
-            displayIngredients(recipe.ingredients);
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                        return false;
+                                    }
+                                })
+                                .placeholder(R.drawable.img_not_found)
+                                .into(mImage);
+
+                        displayIngredients(recipe.ingredients);
+
+                    }
+                }
+            });
+
         }
 
+        // update ActionBar title, and home as up button behaves as back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Recipe details");
     }
 
     private void displayFavorite(boolean isPresent, Menu menu) {
+        // update UI, check if current recipe is present in user's favorite recipes
         if (isPresent) {
             menu.findItem(R.id.action_favorite).setVisible(false);
             menu.findItem(R.id.action_favourite_false).setVisible(true);
@@ -159,9 +183,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     }
 
     private void displayIngredients(List<Ingredient> ingredients) {
+        // inflates view for recipe's ingredients
         View view;
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Toast.makeText(RecipeDetailsActivity.this,String.valueOf(ingredients.size()+" ingredients"),Toast.LENGTH_LONG).show();
+        // for each ingredient create view from specific layout and add it to the common parent
         for (Ingredient i: ingredients) {
             view = inflater.inflate(R.layout.layout_recipe_details_ingredient_item,mIngredientsFrame,false);
             ((TextView) view.findViewWithTag("IngredientText")).setText(i.getValue());
@@ -172,11 +197,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private boolean checkIsMyRecipe() {
         try {
             currentUserID = getIntent().getExtras().getInt("currentUserID");
+            currentUserEmail = getIntent().getExtras().getString("currentUserEmail");
         }
         catch (NullPointerException e) {
+            // smth went wrong and data cannot be read correctly from intent
             finish();
             return false;
         }
+        // check whether recipe is own or from API
         recipeID = getIntent().getExtras().get("recipeFromApiID");
         if (recipeID != null) {
             return false;
@@ -191,26 +219,35 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // actions to ActionBar buttons
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+
+            // shown only when is own recipe
             case R.id.action_delete:
                 int result = mDetailsViewModel.delete((int)recipeID);
                 if (result == 1) {
                     storageReference.delete();
+                    Toast.makeText(RecipeDetailsActivity.this,"Deleted",Toast.LENGTH_SHORT).show();
                     finish();
                     return true;
                 }
+
+            // shown only when is recipe from API and not yet in favorite list
             case R.id.action_favorite:
-                Toast.makeText(this,"Add favorite",Toast.LENGTH_LONG).show();
+                // update local DB
                 int time  = Integer.parseInt(mPreparationTime.getText().toString().substring(0,mPreparationTime.getText().length()-4));
                 mDetailsViewModel.insert(new Favorites(currentUserID,(String) recipeID,mRecipeTitle.getText().toString(),time));
+                Toast.makeText(this,"Marked as favorite",Toast.LENGTH_SHORT).show();
                 return false;
 
+            // shown only when is recipe from API and already in favorite list
             case R.id.action_favourite_false:
-                Toast.makeText(this,"Remove favorite",Toast.LENGTH_LONG).show();
+                // update local DB
                 mDetailsViewModel.delete(new Favorites(currentUserID,(String) recipeID));
+                Toast.makeText(this,"Removed from favorites",Toast.LENGTH_SHORT).show();
                 return false;
 
         }
@@ -219,6 +256,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
+        // inflates buttons in ActionBar regarding the type of recipe
         if (isMyRecipe) {
             getMenuInflater().inflate(R.menu.my_recipe_details_bar_menu,menu);
         }

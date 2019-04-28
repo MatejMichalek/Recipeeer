@@ -51,12 +51,15 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         // Inflate the layout for this fragment
         fab = getActivity().findViewById(R.id.fab);
 
+        // create view model for this fragment
         mProfileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 
+        // start observing changes in current user data
         mProfileViewModel.getUser(((MainActivity) getActivity()).getCurrentUser().getEmail()).observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 if (user != null) {
+                    // update UI
                     ((TextView) getActivity().findViewById(R.id.userEmailText)).setText(user.getEmail());
                     ((EditText) getActivity().findViewById(R.id.usernameEdit)).setText(user.getName());
                     mSpinner.setSelection(user.getGender());
@@ -70,12 +73,15 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // opens dialog
                 mDialog.show();
             }
         });
 
+        // create dialog for editing user name
         createEditDialog();
 
+        // create spinner with data from source and set adapter for it
         mSpinner = view.findViewById(R.id.userGenderSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.gender_array, R.layout.layout_spinner_item);
@@ -84,6 +90,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // update local storage with new data from spinner
                 mProfileViewModel.updateUserGender(((TextView) getActivity().findViewById(R.id.userEmailText)).getText().toString(),position);
             }
 
@@ -103,13 +110,13 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case AlertDialog.BUTTON_POSITIVE:
+                        // update local data stored in DB
                         updateUserInDB();
                         dialog.cancel();
-                        Toast.makeText(getActivity(),"Save clicked",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(),"Updated",Toast.LENGTH_SHORT).show();
                         break;
                     case AlertDialog.BUTTON_NEGATIVE:
                         dialog.cancel();
-                        Toast.makeText(getActivity(),"Cancel clicked",Toast.LENGTH_LONG).show();
                         break;
                     default:
                         break;
@@ -122,6 +129,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
                 mProfileViewModel.updateUsername(email,username);
             }
         };
+        // configure buttons in dialog
         builder.setPositiveButton("Save", dialogOnClickListener);
         builder.setNegativeButton("Cancel", dialogOnClickListener);
 
@@ -154,6 +162,7 @@ public class ProfileFragment extends Fragment implements AdapterView.OnItemSelec
     @Override
     public void onResume() {
         super.onResume();
+        // updates UI - FAB, Drawer and ActionBar
         fab.hide();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My profile");
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.profile);

@@ -76,7 +76,7 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -87,19 +87,18 @@ public class LogInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                            Toast.makeText(LogInActivity.this,user.getDisplayName(),Toast.LENGTH_LONG).show();
-                            enterMainActivity(user);
+                            Toast.makeText(LogInActivity.this,"Logged in as: "+account.getDisplayName(),Toast.LENGTH_LONG).show();
+                            enterMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LogInActivity.this,"Unsuccessfulll",Toast.LENGTH_LONG).show();
+                            Toast.makeText(LogInActivity.this,"Unsuccessful login",Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 
-    private void enterMainActivity(FirebaseUser user) {
+    private void enterMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

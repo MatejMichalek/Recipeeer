@@ -36,7 +36,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
         if (favorites != null) {
             Favorites favoriteRecipe = favorites.get(position);
             holder.recipeNameView.setText(favoriteRecipe.getTitle());
-            holder.preparationTimeView.setText(String.valueOf(favoriteRecipe.getPreparationTime()+" min"));
+            holder.preparationTimeView.setText(favoriteRecipe.getPreparationTime() + " min");
         }
         else {
             holder.recipeNameView.setText("No recipe");

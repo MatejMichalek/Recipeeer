@@ -27,7 +27,6 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             RecipeeerDatabase.class,
                             "Recipeeer")
-//                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -40,42 +39,4 @@ public abstract class RecipeeerDatabase extends RoomDatabase {
     public abstract IngredientDao ingredientDao();
     public abstract FavoritesDao favoritesDao();
 
-    private static RoomDatabase.Callback
-            sRoomDatabaseCallback = new RoomDatabase.Callback(){
-        @Override
-        public void onOpen(@NonNull SupportSQLiteDatabase db) {
-            super.onOpen(db);
-            new PopulateDbAsync(INSTANCE).execute();
-        }
-    };
-
-
-    private static class PopulateDbAsync extends AsyncTask<Void,Void,Void> {
-
-        private final UserDao userDao;
-        private final RecipeDao recipeDao;
-
-        public PopulateDbAsync(RecipeeerDatabase instance) {
-            userDao = instance.userDao();
-            recipeDao = instance.recipeDao();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-//            Recipe recipe = new Recipe("My first recipe",85,"cdcsdcasda",97);
-//            recipeDao.insert(recipe);
-//            recipe = new Recipe("My second recipe",40,"cdcsddfsq dsa ",97);
-//            recipeDao.insert(recipe);
-//            recipe = new Recipe("Recipe from somebody else",550,"asfa sldasn doals kdaos dka d",95);
-//            recipeDao.insert(recipe);
-//            recipe = new Recipe("My third recipe",400,"af asf ajuohjnfgf dsa ",97);
-//            recipeDao.insert(recipe);
-//            userDao.deleteAll();
-//            User user = new User("MyEmail","Matej",21,1);
-//            userDao.insert(user);
-//            user = new User("MyEmail2","Lukas",41,1);
-//            userDao.insert(user);
-            return null;
-        }
-    }
 }

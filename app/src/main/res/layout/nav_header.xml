@@ -18,7 +18,7 @@
         android:id="@+id/headerUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="@string/drawer_name"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
         android:textSize="25sp"
         android:fontFamily="@font/roboto_medium"

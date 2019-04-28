@@ -24,8 +24,6 @@ public class RecipeRepository {
     private FavoritesDao favoritesDao;
     private ApiEndpoint apiEndpointService;
 
-//    private LiveData<List<Recipe>> allMyRecipes;
-
     public RecipeRepository(Application application) {
         RecipeeerDatabase db = RecipeeerDatabase.getDatabase(application);
         recipeDao = db.recipeDao();
@@ -38,6 +36,10 @@ public class RecipeRepository {
 
     public LiveData<Recipe> getRecipeById(int recipeID) {
         return recipeDao.getRecipeById(recipeID);
+    }
+
+    public LiveData<List<Favorites>> getFavoritesForUser(int userId) {
+        return favoritesDao.getFavoriteRecipesForUser(userId);
     }
 
     public int insert(Recipe recipe) {
@@ -56,10 +58,6 @@ public class RecipeRepository {
         new insertFavoritesAsyncTask(favoritesDao).execute(favorites).getStatus();
     }
 
-    public void delete(Favorites favorites) {
-        new deleteFavoritesAsyncTask(favoritesDao).execute(favorites);
-    }
-
     public int delete(int recipeID) {
         try {
             return new deleteAsyncTask(recipeDao).execute(recipeID).get();
@@ -72,9 +70,12 @@ public class RecipeRepository {
         }
     }
 
+    public void delete(Favorites favorites) {
+        new deleteFavoritesAsyncTask(favoritesDao).execute(favorites);
+    }
+
     public RecipeListFromAPI getSearchedRecipes(String searchTerm, int offset) {
         try {
-
             apiEndpointService = ApiHandler.createEndpoint(true);
             return new getSearchAsyncTask(apiEndpointService).execute(new SearchWrapper(searchTerm,offset)).get();
         } catch (ExecutionException e) {
@@ -99,22 +100,8 @@ public class RecipeRepository {
         }
     }
 
-    public LiveData<List<Favorites>> getFavoritesForUser(int userId) {
-        return favoritesDao.getFavoriteRecipesForUser(userId);
-    }
-
-    private class SearchWrapper{
-        String searchTerm;
-        int offset;
-
-        SearchWrapper(String searchTerm, int offset) {
-            this.searchTerm = searchTerm;
-            this.offset = offset;
-        }
-    }
-
-
     private static class insertAsyncTask extends AsyncTask<Recipe,Void,Long>{
+
 
         private RecipeDao asyncTaskDao;
 
@@ -129,6 +116,7 @@ public class RecipeRepository {
     }
 
     private static class deleteAsyncTask extends AsyncTask<Integer,Void,Integer> {
+
 
         private RecipeDao asyncTaskDao;
 
@@ -152,7 +140,7 @@ public class RecipeRepository {
 
         @Override
         protected RecipeListFromAPI doInBackground(SearchWrapper... searchWrappers) {
-            Call<RecipeListFromAPI> call = apiEndpointService.getSearchedRecipes(searchWrappers[0].searchTerm,searchWrappers[0].offset);
+            Call<RecipeListFromAPI> call = asyncTaskApi.getSearchedRecipes(searchWrappers[0].searchTerm,searchWrappers[0].offset);
             Log.i("REQUEST URL",call.request().url().toString());
 
             Response<RecipeListFromAPI> response;
@@ -178,7 +166,7 @@ public class RecipeRepository {
 
         @Override
         protected RecipeFromAPI doInBackground(String... strings) {
-            Call<RecipeFromAPI> call = apiEndpointService.getRecipeFromApi(strings[0]);
+            Call<RecipeFromAPI> call = asyncTaskApi.getRecipeFromApi(strings[0]);
             Log.i("REQUEST URL",call.request().url().toString());
 
             Response<RecipeFromAPI> response;
@@ -221,4 +209,15 @@ public class RecipeRepository {
             return null;
         }
     }
+
+    private class SearchWrapper{
+        String searchTerm;
+        int offset;
+
+        SearchWrapper(String searchTerm, int offset) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+        }
+    }
+
 }

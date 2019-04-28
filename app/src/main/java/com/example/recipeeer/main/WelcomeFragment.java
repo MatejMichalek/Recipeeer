@@ -15,8 +15,6 @@ import android.widget.EditText;
 
 import com.example.recipeeer.R;
 import com.example.recipeeer.domain.QuickSearchItem;
-import com.example.recipeeer.search.OnSearchIconClickListener;
-import com.example.recipeeer.search.QuickSearchAdapter;
 import com.example.recipeeer.search.SearchActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -33,8 +31,6 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
     private OnFragmentInteractionListener mListener;
 
     private FloatingActionButton fab;
-
-    private QuickSearchAdapter mAdapter;
     private EditText searchEdit;
 
 
@@ -56,12 +52,14 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
 
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
+        // creates recycler view with grid layout
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_quickSearch);
         GridLayoutManager manager = new GridLayoutManager(getActivity(),4);
         recyclerView.setLayoutManager(manager);
 
-        mAdapter = new QuickSearchAdapter(loadQuickSearchItems(),this);
-        recyclerView.setAdapter(mAdapter);
+        // set and populate adapter for recycler view
+        QuickSearchAdapter adapter = new QuickSearchAdapter(loadQuickSearchItems(), this);
+        recyclerView.setAdapter(adapter);
 
         final Button searchButton = view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +72,7 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
         });
 
         searchEdit = view.findViewById(R.id.searchEdit);
+        // listener to check if input fields contains smth or is empty --> enable/disable search button
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -99,6 +98,7 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
         return view;
     }
 
+    // starting search activity with searchTerm from editView
     private void startSearch(String searchTerm) {
         Intent intent = new Intent(getActivity(), SearchActivity.class);
         intent.putExtra("currentUserID",((MainActivity) getActivity()).getCurrentUser().getId());
@@ -114,6 +114,7 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
     @Override
     public void onResume() {
         super.onResume();
+        // updates UI - FAB, Drawer and ActionBar
         fab.show();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
         ((ActivityWithDrawer) getActivity()).updateNavState(R.id.mHome); //just add this line
@@ -156,6 +157,7 @@ public class WelcomeFragment extends Fragment implements OnSearchIconClickListen
         void onFragmentInteraction(Uri uri);
     }
 
+    // create list of quick search items
     private List<QuickSearchItem> loadQuickSearchItems() {
         List<QuickSearchItem> items = new ArrayList<>();
         items.add(new QuickSearchItem("Chicken",R.drawable.icons8_chicken_50));

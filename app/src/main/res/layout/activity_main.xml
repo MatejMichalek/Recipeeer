@@ -18,7 +18,7 @@ android:background="@color/colorAppBackground">
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/layout_action_bar"></include>
+            <include layout="@layout/layout_action_bar" />
 
             <fragment
                 android:id="@+id/content_frame"

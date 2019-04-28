@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class RecipeFromAPI {
+
+    // fields not annotated as Expose are ignored while making search request since there is no need of recipe details
     @SerializedName("id")
     @Expose
     public String recipeID;

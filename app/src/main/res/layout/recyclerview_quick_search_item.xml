@@ -18,8 +18,8 @@
         android:id="@+id/recyclerView_quickSearch_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chicken"
-        android:textSize="15sp"
+        android:text="@string/chicken"
+        android:textSize="12sp"
         android:textColor="@color/colorToolbar"
         android:gravity="center"/>
 

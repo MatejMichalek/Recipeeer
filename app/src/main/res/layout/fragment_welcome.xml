@@ -5,31 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".main.WelcomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-<!--    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Welcome fragment" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"
-            android:id="@+id/searchButton"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_users"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/recyclerview_users_item" />
-
-    </LinearLayout>-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,9 +15,9 @@
             android:id="@+id/searchEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search for recipe"
+            android:hint="@string/hint_search_for_recipe"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:inputType="text"
             android:maxLines="1"
             android:maxLength="40"
@@ -53,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_search_black"
-            android:text="Search"
+            android:text="@string/search_button"
             android:background="@drawable/my_recipe_item"
             android:drawablePadding="10dp"
             android:paddingHorizontal="20dp"
@@ -64,7 +39,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Quick search"
+            android:text="@string/quick_search"
             android:layout_marginHorizontal="20dp"
             android:textSize="15sp"/>
 
@@ -74,41 +49,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             tools:listitem="@layout/recyclerview_quick_search_item">
-
         </androidx.recyclerview.widget.RecyclerView>
 
-        <!--<GridView-->
-            <!--android:id="@+id/gridView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:gravity="center"-->
-            <!--android:columnWidth="100dp"-->
-            <!--android:numColumns="auto_fit"-->
-            <!--android:verticalSpacing="24dp"-->
-            <!--android:horizontalSpacing="10dp"-->
-            <!--android:stretchMode="spacingWidthUniform"-->
-            <!--/>-->
-
-        <!---->
-        <!--<GridView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:columnCount="2"-->
-            <!--android:rowCount="1"-->
-
-            <!--&gt;-->
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/icons8-chicken-50"-->
-                <!--/>-->
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/icons8-chicken-50"-->
-                <!--/>-->
-
-        <!--</GridView>-->
     </LinearLayout>
 
 

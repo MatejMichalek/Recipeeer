@@ -14,6 +14,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class DetailsViewModel extends AndroidViewModel {
 
@@ -34,8 +35,9 @@ public class DetailsViewModel extends AndroidViewModel {
         return ingredientRepository.getIngredientsForRecipe(recipeID);
     }
 
-    public RecipeFromAPI getRecipeFromApi(String recipeID) {
-        RecipeFromAPI recipe = recipeRepository.getRecipeFromApi(recipeID);
+    public MutableLiveData<RecipeFromAPI> getRecipeFromApi(String recipeID) {
+        MutableLiveData<RecipeFromAPI> recipe = new MutableLiveData<>();
+        recipe.setValue(recipeRepository.getRecipeFromApi(recipeID));
         return recipe;
     }
 
